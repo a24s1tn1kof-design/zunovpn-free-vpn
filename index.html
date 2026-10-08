@@ -39,8 +39,7 @@
   .perm-btn:active { transform:scale(0.97); }
 
   #main-screen { display:none; width:100%; max-width:400px; text-align:center; }
-  .logo { font-size:28px; font-weight:800; color:#a855f7; margin-bottom:10px; letter-spacing:2px; }
-  .subtitle { font-size:11px; color:#666; margin-bottom:25px; letter-spacing:1px; text-transform:uppercase; }
+  .logo { font-size:28px; font-weight:800; color:#a855f7; margin-bottom:25px; letter-spacing:2px; }
 
   .vpn-wrap { position:relative; margin:0 auto 35px; width:180px; height:180px; }
   .vpn-btn {
@@ -110,7 +109,7 @@
     cursor:pointer; font-size:14px;
   }
   .server-pill .flag { font-size:20px; margin-right:8px; }
-  .server-pill .ping { color:#22c55e; font-size:12px; font-family:monospace; }
+  .server-pill .ping { font-size:12px; font-family:monospace; font-weight:700; }
   .server-pill .arrow { color:#666; }
 
   .status-line { margin-top:12px; font-size:11px; color:#555; min-height:14px; }
@@ -150,23 +149,15 @@
   .ad-close.ready { background:#fff; color:#7c3aed; cursor:pointer; opacity:1; font-weight:700; }
 
   .wheel-container { position:relative; width:260px; height:260px; margin:0 auto 20px; }
-  .wheel {
-    width:100%; height:100%; border-radius:50%;
+  #wheelCanvas { width:260px; height:260px; border-radius:50%;
+    box-shadow:0 0 30px rgba(168,85,247,0.5);
     transition:transform 4s cubic-bezier(0.17, 0.67, 0.12, 1);
-    box-shadow:0 0 30px rgba(168,85,247,0.5), inset 0 0 20px rgba(0,0,0,0.4);
-    position:relative; overflow:hidden;
-  }
-  .wheel-segment {
-    position:absolute; top:0; left:50%; width:50%; height:50%;
-    transform-origin:0 100%; display:flex; align-items:center;
-    padding-left:20px; font-size:11px; font-weight:700; color:#fff;
-    text-shadow:0 1px 2px rgba(0,0,0,0.5);
   }
   .wheel-pointer {
     position:absolute; top:-10px; left:50%; transform:translateX(-50%);
-    width:0; height:0; border-left:12px solid transparent;
-    border-right:12px solid transparent; border-top:20px solid #fbbf24;
-    z-index:5; filter:drop-shadow(0 2px 4px rgba(0,0,0,0.5));
+    width:0; height:0; border-left:14px solid transparent;
+    border-right:14px solid transparent; border-top:22px solid #fbbf24;
+    z-index:5; filter:drop-shadow(0 2px 4px rgba(0,0,0,0.6));
   }
   .spin-btn {
     background:linear-gradient(135deg, #f59e0b, #d97706); color:#fff;
@@ -206,7 +197,7 @@
   .server-item.selected { border-color:#a855f7; background:#2a1f3d; }
   .server-item .flag { font-size:24px; margin-right:12px; }
   .server-item .name { flex:1; text-align:left; font-weight:600; }
-  .server-item .ping { font-size:12px; color:#22c55e; font-family:monospace; }
+  .server-item .ping { font-size:12px; font-family:monospace; font-weight:700; }
   .server-item .check { color:#a855f7; margin-left:8px; display:none; }
   .server-item.selected .check { display:inline; }
 </style>
@@ -222,19 +213,17 @@
   <symbol id="i-chart" viewBox="0 0 24 24"><path d="M5 9.2h3V19H5zM10.6 5h2.8v14h-2.8zm5.6 8H19v6h-2.8z"/></symbol>
   <symbol id="i-wheel" viewBox="0 0 24 24"><path d="M12 2a10 10 0 1 0 0 20 10 10 0 0 0 0-20zm0 3.5c1.5 0 2.9.5 4 1.4l-3 2.5-1-.9-1 .9-3-2.5A6.5 6.5 0 0 1 12 5.5zm-6 3.9l3.5 2.9-.6 2 1.8 1.3-.3 2.6a6.5 6.5 0 0 1-4.4-8.8zm12 0a6.5 6.5 0 0 1-4.4 8.8l-.3-2.6 1.8-1.3-.6-2L18 9.4zm-6 6.8l.8-.6.5.2.6-.7a6.5 6.5 0 0 1-2 1.1z"/></symbol>
   <symbol id="i-globe" viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 17.93c-3.94-.49-7-3.85-7-7.93 0-.62.08-1.21.21-1.79L9 15v1c0 1.1.9 2 2 2v1.93zm6.9-2.54c-.26-.81-1-1.39-1.9-1.39h-1v-3c0-.55-.45-1-1-1H8v-2h2c.55 0 1-.45 1-1V7h2c1.1 0 2-.9 2-2v-.41c2.93 1.19 5 4.06 5 7.41 0 2.08-.8 3.97-2.1 5.39z"/></symbol>
-  <symbol id="i-close" viewBox="0 0 24 24"><path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></symbol>
 </svg>
 
 <div id="permission-screen">
   <h1><svg class="icon" style="width:32px;height:32px;fill:#a855f7"><use href="#i-shield"/></svg> Zuno VPN</h1>
-  <p>Виртуальный VPN-симулятор.<br>Разрешите уведомления и подключитесь.</p>
+  <p>Для работы разрешите<br>показ уведомлений</p>
   <button class="perm-btn" onclick="grantPermission()">Разрешить</button>
   <div class="status-line" id="permStatus"></div>
 </div>
 
 <div id="main-screen">
   <div class="logo">ZUNO VPN</div>
-  <div class="subtitle">Simulator · не настоящий VPN</div>
 
   <div class="vpn-wrap">
     <div class="radar" id="radar"></div>
@@ -293,7 +282,7 @@
     <p style="font-size:13px;color:#aaa;margin-bottom:20px;">Раз в день — бесплатно!</p>
     <div class="wheel-container">
       <div class="wheel-pointer"></div>
-      <div class="wheel" id="wheel"></div>
+      <canvas id="wheelCanvas" width="520" height="520"></canvas>
     </div>
     <button class="spin-btn" id="spinBtn" onclick="spinWheel()">Крутить</button>
     <div class="spin-result" id="spinResult"></div>
@@ -322,14 +311,13 @@
 </div>
 
 <script>
-   // ==================== СОСТОЯНИЕ ====================
-  const STORAGE_KEY = 'zuno_vpn_v2';
+   const STORAGE_KEY = 'zuno_vpn_v3';
   const SERVERS = [
-    { code:'NL', flag:'🇳🇱', name:'Нидерланды', ping:12 },
-    { code:'DE', flag:'🇩🇪', name:'Германия', ping:24 },
-    { code:'US', flag:'🇺🇸', name:'США', ping:87 },
-    { code:'JP', flag:'🇯🇵', name:'Япония', ping:142 },
-    { code:'RU', flag:'🇷🇺', name:'Россия', ping:8 }
+    { code:'NL', flag:'🇳🇱', name:'Нидерланды', basePing:12 },
+    { code:'DE', flag:'🇩🇪', name:'Германия',   basePing:24 },
+    { code:'US', flag:'🇺🇸', name:'США',        basePing:87 },
+    { code:'JP', flag:'🇯🇵', name:'Япония',     basePing:142 },
+    { code:'RU', flag:'🇷🇺', name:'Россия',     basePing:8 }
   ];
   const DEFAULT_STATE = {
     usedMB:0, totalMB:30*1024, maxMB:200*1024,
@@ -351,12 +339,12 @@
   }
 
   let state = loadState();
-  let interval = null, notificationInterval = null, speedInterval = null;
+  let interval = null, notificationInterval = null, speedInterval = null, pingInterval = null;
+  let currentPing = 0;
   const MB_PER_TICK = 1;
   const TICK_MS = 200;
 
   function log(msg) {
-    console.log(msg);
     const el = document.getElementById('mainStatus') || document.getElementById('permStatus');
     if (el) el.textContent = msg;
   }
@@ -364,9 +352,8 @@
   function updateStreak() {
     const today = new Date().toISOString().slice(0,10);
     if (state.lastVisit === today) return;
-    const yesterday = new Date(Date.now() - 86400000).toISOString().slice(0,10);
-    if (state.lastVisit === yesterday) state.streak = (state.streak||1) + 1;
-    else state.streak = 1;
+    const y = new Date(Date.now() - 86400000).toISOString().slice(0,10);
+    state.streak = (state.lastVisit === y) ? (state.streak||1) + 1 : 1;
     state.lastVisit = today;
     saveState();
   }
@@ -414,12 +401,15 @@
     document.getElementById('main-screen').style.display = 'block';
     updateStreak();
     renderServer();
+    currentPing = getServer().basePing;
+    updatePingDisplay();
     if (state.connected) {
       document.getElementById('vpnBtn').classList.add('connected');
       updateVPNBtn();
       document.getElementById('radar').classList.add('active');
       startTraffic();
       startSpeed();
+      startPing();
     } else {
       updateVPNBtn();
     }
@@ -445,17 +435,14 @@
     saveState();
     updateVPNBtn();
     if (state.connected) {
-      startTraffic(); startSpeed();
+      startTraffic(); startSpeed(); startPing();
       showNotification(
         'VPN подключение активно',
         'Сервер: ' + getServer().name + ' · ' + formatTraffic(state.usedMB) + ' / ' + formatTraffic(state.totalMB),
-        { actions:[
-          { action:'disconnect', title:'Отключить' },
-          { action:'open_recharge', title:'+ Пополнить' }
-        ]}
+        { actions:[{ action:'disconnect', title:'Отключить' }] }
       );
     } else {
-      stopTraffic(); stopSpeed();
+      stopTraffic(); stopSpeed(); stopPing();
       showNotification('VPN отключён', 'Соединение разорвано');
     }
   }
@@ -474,11 +461,43 @@
   function updateSpeed() {
     if (!state.connected) return;
     const server = getServer();
-    const base = 100 - Math.min(server.ping, 90);
+    const base = 100 - Math.min(server.basePing, 90);
     const speed = (base * (0.5 + Math.random()*0.8)).toFixed(1);
     const down = (speed * (0.7 + Math.random()*0.5)).toFixed(1);
     document.getElementById('speedText').innerHTML =
       '<span class="speed-val">↑ ' + speed + ' Мбит/с</span> &nbsp; <span class="speed-val">↓ ' + down + ' Мбит/с</span>';
+  }
+
+  function startPing() {
+    stopPing();
+    updatePing();
+    pingInterval = setInterval(updatePing, 2000);
+  }
+  function stopPing() {
+    if (pingInterval) clearInterval(pingInterval);
+    pingInterval = null;
+    currentPing = getServer().basePing;
+    updatePingDisplay();
+  }
+  function updatePing() {
+    const base = getServer().basePing;
+    const delta = Math.floor(Math.random()*5) - 2;
+    currentPing = Math.max(1, base + delta);
+    updatePingDisplay();
+  }
+  function updatePingDisplay() {
+    const el = document.getElementById('curPing');
+    if (!el) return;
+    const base = getServer().basePing;
+    const diff = Math.abs(currentPing - base);
+    el.textContent = currentPing + ' ms';
+    if (!state.connected) {
+      el.style.color = '#22c55e';
+    } else if (diff <= 2) {
+      el.style.color = '#22c55e';
+    } else {
+      el.style.color = '#ef4444';
+    }
   }
 
   function startTraffic() {
@@ -487,7 +506,7 @@
       state.usedMB += MB_PER_TICK;
       if (state.usedMB >= state.totalMB) {
         state.usedMB = state.totalMB;
-        stopTraffic(); stopSpeed();
+        stopTraffic(); stopSpeed(); stopPing();
         state.connected = false;
         document.getElementById('radar').classList.remove('active');
         saveState(); updateVPNBtn();
@@ -502,10 +521,7 @@
         showNotification(
           'VPN активен · ' + getServer().name,
           'Трафик: ' + formatTraffic(state.usedMB) + ' / ' + formatTraffic(state.totalMB),
-          { actions:[
-            { action:'disconnect', title:'Отключить' },
-            { action:'open_recharge', title:'+ Пополнить' }
-          ]}
+          { actions:[{ action:'disconnect', title:'Отключить' }] }
         );
       }
     }, 8000);
@@ -526,12 +542,32 @@
     return Math.floor(mb) + ' МБ';
   }
 
+  function makeIconSvg() {
+    // Современная градиентная иконка со щитом и молнией
+    return 'data:image/svg+xml,' + encodeURIComponent(
+      '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128">' +
+      '<defs>' +
+      '<linearGradient id="g" x1="0" y1="0" x2="1" y2="1">' +
+      '<stop offset="0%" stop-color="#a855f7"/>' +
+      '<stop offset="100%" stop-color="#4c1d95"/>' +
+      '</linearGradient>' +
+      '<linearGradient id="bolt" x1="0" y1="0" x2="0" y2="1">' +
+      '<stop offset="0%" stop-color="#22d3ee"/>' +
+      '<stop offset="100%" stop-color="#3b82f6"/>' +
+      '</linearGradient>' +
+      '</defs>' +
+      '<rect x="0" y="0" width="128" height="128" rx="28" fill="url(#g)"/>' +
+      '<path d="M64 20 L100 34 v30 c0 22 -15 38 -36 46 C43 102 28 86 28 64 V34 Z" ' +
+      'fill="rgba(255,255,255,0.12)" stroke="rgba(255,255,255,0.5)" stroke-width="3"/>' +
+      '<path d="M70 40 L48 70 h14 l-4 20 22-32 H66 Z" fill="url(#bolt)"/>' +
+      '</svg>'
+    );
+  }
+
   async function showNotification(title, body, opts = {}) {
     if (!('Notification' in window)) return;
     if (Notification.permission !== 'granted') return;
-    const iconUrl = 'data:image/svg+xml,' + encodeURIComponent(
-      '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><circle cx="50" cy="50" r="45" fill="#a855f7"/><text x="50" y="68" font-size="55" text-anchor="middle" fill="white" font-family="sans-serif" font-weight="bold">Z</text></svg>'
-    );
+    const iconUrl = makeIconSvg();
     const options = {
       body: body, icon: iconUrl, badge: iconUrl,
       renotify: false, silent: false,
@@ -547,7 +583,7 @@
       } else {
         new Notification(title, options);
       }
-      log('Уведомление: ' + title);
+      log('Уведомление отправлено');
     } catch(e) { log('Ошибка уведомления: ' + e.message); }
   }
 
@@ -579,9 +615,12 @@
     if (!adReady) return;
     if (adInterval) { clearInterval(adInterval); adInterval = null; }
     document.getElementById('ad-modal').classList.remove('active');
+
+    const wantAdd = 10 * 1024;  // всегда +10 ГБ (10240 МБ)
     const before = state.totalMB;
-    state.totalMB = Math.min(state.totalMB + 10*1024, state.maxMB);
+    state.totalMB = Math.min(state.totalMB + wantAdd, state.maxMB);
     const added = state.totalMB - before;
+
     state.adsWatched = (state.adsWatched||0) + 1;
     saveState(); updateTrafficUI();
     showNotification('Трафик пополнен', '+' + formatTraffic(added) + '. Всего: ' + formatTraffic(state.totalMB));
@@ -589,19 +628,68 @@
   }
 
   const WHEEL_PRIZES = [
-    { label:'100 МБ', mb:100, color:'#7c3aed' },
-    { label:'Пусто', mb:0, color:'#3a2a50' },
-    { label:'500 МБ', mb:500, color:'#a855f7' },
-    { label:'1 ГБ', mb:1024, color:'#22c55e' },
-    { label:'Пусто', mb:0, color:'#3a2a50' },
-    { label:'2 ГБ', mb:2048, color:'#f59e0b' },
-    { label:'250 МБ', mb:250, color:'#7c3aed' },
-    { label:'5 ГБ', mb:5120, color:'#ef4444' }
+    { label:'100 МБ', mb:100,  color:'#7c3aed' },
+    { label:'Пусто',  mb:0,    color:'#3a2a50' },
+    { label:'500 МБ', mb:500,  color:'#a855f7' },
+    { label:'1 ГБ',   mb:1024, color:'#22c55e' },
+    { label:'Пусто',  mb:0,    color:'#3a2a50' },
+    { label:'2 ГБ',   mb:2048, color:'#f59e0b' },
+    { label:'250 МБ', mb:250,  color:'#7c3aed' },
+    { label:'5 ГБ',   mb:5120, color:'#ef4444' }
   ];
   let wheelRotation = 0;
 
+  function drawWheel() {
+    const canvas = document.getElementById('wheelCanvas');
+    if (!canvas) return;
+    const ctx = canvas.getContext('2d');
+    const W = canvas.width, H = canvas.height;
+    const cx = W/2, cy = H/2, r = W/2 - 6;
+    const n = WHEEL_PRIZES.length;
+    const seg = (2*Math.PI) / n;
+    ctx.clearRect(0, 0, W, H);
+
+    for (let i = 0; i < n; i++) {
+      const start = i*seg - Math.PI/2 - seg/2;
+      const end = start + seg;
+      ctx.beginPath();
+      ctx.moveTo(cx, cy);
+      ctx.arc(cx, cy, r, start, end);
+      ctx.closePath();
+      ctx.fillStyle = WHEEL_PRIZES[i].color;
+      ctx.fill();
+      ctx.strokeStyle = 'rgba(0,0,0,0.25)';
+      ctx.lineWidth = 2;
+      ctx.stroke();
+
+      // текст
+      ctx.save();
+      ctx.translate(cx, cy);
+      ctx.rotate(start + seg/2);
+      ctx.fillStyle = '#fff';
+      ctx.font = 'bold 26px -apple-system, sans-serif';
+      ctx.textAlign = 'right';
+      ctx.textBaseline = 'middle';
+      ctx.shadowColor = 'rgba(0,0,0,0.6)';
+      ctx.shadowBlur = 4;
+      ctx.fillText(WHEEL_PRIZES[i].label, r - 24, 0);
+      ctx.restore();
+    }
+
+    // центр
+    ctx.beginPath();
+    ctx.arc(cx, cy, 34, 0, 2*Math.PI);
+    ctx.fillStyle = '#1a1228';
+    ctx.fill();
+    ctx.strokeStyle = '#a855f7';
+    ctx.lineWidth = 3;
+    ctx.stroke();
+  }
+
   function openWheel() {
-    buildWheel();
+    drawWheel();
+    const canvas = document.getElementById('wheelCanvas');
+    canvas.style.transform = 'rotate(' + wheelRotation + 'deg)';
     const today = new Date().toISOString().slice(0,10);
     const btn = document.getElementById('spinBtn');
     if (state.lastSpinDate === today) {
@@ -616,34 +704,22 @@
     document.getElementById('wheel-modal').classList.add('active');
   }
 
-  function buildWheel() {
-    const wheel = document.getElementById('wheel');
-    wheel.innerHTML = '';
-    const n = WHEEL_PRIZES.length;
-    const angle = 360 / n;
-    WHEEL_PRIZES.forEach((p, i) => {
-      const seg = document.createElement('div');
-      seg.className = 'wheel-segment';
-      seg.style.background = p.color;
-      seg.style.transform = 'rotate(' + (i * angle) + 'deg) skewY(' + (90 - angle) + 'deg)';
-      seg.textContent = p.label;
-      wheel.appendChild(seg);
-    });
-    wheel.style.transform = 'rotate(' + wheelRotation + 'deg)';
-  }
-
   function spinWheel() {
     const today = new Date().toISOString().slice(0,10);
     if (state.lastSpinDate === today) return;
     const btn = document.getElementById('spinBtn');
     btn.disabled = true;
     btn.textContent = 'Крутится...';
+
     const n = WHEEL_PRIZES.length;
     const segAngle = 360 / n;
     const winIndex = Math.floor(Math.random() * n);
     const targetAngle = 360 * 5 + (360 - winIndex * segAngle - segAngle/2);
     wheelRotation += targetAngle;
-    document.getElementById('wheel').style.transform = 'rotate(' + wheelRotation + 'deg)';
+
+    const canvas = document.getElementById('wheelCanvas');
+    canvas.style.transform = 'rotate(' + wheelRotation + 'deg)';
+
     setTimeout(() => {
       const prize = WHEEL_PRIZES[winIndex];
       const resEl = document.getElementById('spinResult');
@@ -702,16 +778,19 @@
     list.innerHTML = '';
     SERVERS.forEach(s => {
       const item = document.createElement('div');
+      const pingColor = s.basePing < 50 ? '#22c55e' : '#ef4444';
       item.className = 'server-item' + (s.code === state.serverCode ? ' selected' : '');
       item.innerHTML =
         '<span class="flag">' + s.flag + '</span>' +
         '<span class="name">' + s.name + '</span>' +
-        '<span class="ping">' + s.ping + ' ms</span>' +
+        '<span class="ping" style="color:' + pingColor + '">' + s.basePing + ' ms</span>' +
         '<span class="check">✓</span>';
       item.onclick = () => {
         state.serverCode = s.code;
         saveState();
+        currentPing = s.basePing;
         renderServer();
+        updatePingDisplay();
         closeModal('servers-modal');
         if (state.connected) {
           updateSpeed();
@@ -727,7 +806,7 @@
     const s = getServer();
     document.getElementById('curFlag').textContent = s.flag;
     document.getElementById('curServer').textContent = s.name;
-    document.getElementById('curPing').textContent = s.ping + ' ms';
+    updatePingDisplay();
   }
 
   function closeModal(id) { document.getElementById(id).classList.remove('active'); }
@@ -736,7 +815,6 @@
     navigator.serviceWorker.addEventListener('message', (event) => {
       if (!event.data) return;
       if (event.data.action === 'disconnect' && state.connected) toggleVPN();
-      if (event.data.action === 'open_recharge') showAd();
     });
   }
 
