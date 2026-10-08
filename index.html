@@ -4,6 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 <meta name="theme-color" content="#0f0a1e">
+<link rel="manifest" href="./manifest.json">
 <title>Zuno VPN</title>
 <style>
   * { margin:0; padding:0; box-sizing:border-box; font-family:-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; -webkit-tap-highlight-color:transparent; }
@@ -39,7 +40,7 @@
   .perm-btn:active { transform:scale(0.97); }
 
   #main-screen { display:none; width:100%; max-width:400px; text-align:center; }
-  .logo { font-size:28px; font-weight:800; color:#a855f7; margin-bottom:25px; letter-spacing:2px; }
+  .logo { font-size:28px; font-weight:800; color:#a855f7; margin-top:-30px; margin-bottom:25px; letter-spacing:2px; }
 
   .vpn-wrap { position:relative; margin:0 auto 35px; width:180px; height:180px; }
   .vpn-btn {
@@ -491,9 +492,7 @@
     const base = getServer().basePing;
     const diff = Math.abs(currentPing - base);
     el.textContent = currentPing + ' ms';
-    if (!state.connected) {
-      el.style.color = '#22c55e';
-    } else if (diff <= 2) {
+    if (!state.connected || diff <= 2) {
       el.style.color = '#22c55e';
     } else {
       el.style.color = '#ef4444';
@@ -543,7 +542,6 @@
   }
 
   function makeIconSvg() {
-    // Современная градиентная иконка со щитом и молнией
     return 'data:image/svg+xml,' + encodeURIComponent(
       '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128">' +
       '<defs>' +
@@ -616,7 +614,7 @@
     if (adInterval) { clearInterval(adInterval); adInterval = null; }
     document.getElementById('ad-modal').classList.remove('active');
 
-    const wantAdd = 10 * 1024;  // всегда +10 ГБ (10240 МБ)
+    const wantAdd = 10 * 1024;
     const before = state.totalMB;
     state.totalMB = Math.min(state.totalMB + wantAdd, state.maxMB);
     const added = state.totalMB - before;
@@ -662,7 +660,6 @@
       ctx.lineWidth = 2;
       ctx.stroke();
 
-      // текст
       ctx.save();
       ctx.translate(cx, cy);
       ctx.rotate(start + seg/2);
@@ -676,7 +673,6 @@
       ctx.restore();
     }
 
-    // центр
     ctx.beginPath();
     ctx.arc(cx, cy, 34, 0, 2*Math.PI);
     ctx.fillStyle = '#1a1228';
@@ -726,7 +722,6 @@
       if (prize.mb > 0) {
         const before = state.totalMB;
         state.totalMB = Math.min(state.totalMB + prize.mb, state.maxMB);
-        const added = state.totalMB - before;
         resEl.textContent = 'Выпало: ' + prize.label + '!';
         showNotification('Колесо удачи', 'Выигрыш: ' + prize.label);
         updateTrafficUI();
@@ -822,6 +817,23 @@
   document.addEventListener('visibilitychange', () => { if (document.hidden) saveState(); });
 
   initParticles();
+
+  // Автопроверка разрешения при загрузке — не спрашиваем повторно
+  function autoCheckPermission() {
+    if (!('Notification' in window)) { enterApp(); return; }
+    if (Notification.permission === 'granted') {
+      if ('serviceWorker' in navigator) {
+        navigator.serviceWorker.register('./sw.js').catch(()=>{});
+      }
+      enterApp();
+    } else if (Notification.permission === 'denied') {
+      const el = document.getElementById('permStatus');
+      if (el) el.textContent = 'Уведомления отключены в браузере';
+      setTimeout(enterApp, 800);
+    }
+    // если 'default' — оставляем экран разрешения
+  }
+  autoCheckPermission();
 </script>
 </body>
 </html>
