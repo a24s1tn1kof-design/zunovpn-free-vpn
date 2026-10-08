@@ -6,162 +6,268 @@
 <meta name="theme-color" content="#0f0a1e">
 <title>Zuno VPN</title>
 <style>
-  * { margin: 0; padding: 0; box-sizing: border-box; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; -webkit-tap-highlight-color: transparent; }
+  * { margin:0; padding:0; box-sizing:border-box; font-family:-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; -webkit-tap-highlight-color:transparent; }
   body {
-    background: #0f0a1e; color: #fff; min-height: 100vh;
-    display: flex; flex-direction: column; align-items: center; justify-content: center;
-    padding: 20px; overflow-x: hidden; user-select: none;
+    background:#0f0a1e; color:#fff; min-height:100vh;
+    display:flex; flex-direction:column; align-items:center; justify-content:center;
+    padding:20px; overflow-x:hidden; user-select:none; position:relative;
   }
-  .icon { display: inline-block; vertical-align: middle; width: 1em; height: 1em; fill: currentColor; }
+  .icon { display:inline-block; vertical-align:middle; width:1em; height:1em; fill:currentColor; }
 
+  #particles { position:fixed; inset:0; z-index:0; pointer-events:none; }
+  .particle { position:absolute; border-radius:50%; background:#a855f7; opacity:0; animation:float linear infinite; }
+  @keyframes float {
+    0% { transform:translateY(0) scale(0); opacity:0; }
+    10% { opacity:0.6; }
+    90% { opacity:0.6; }
+    100% { transform:translateY(-100vh) scale(1.2); opacity:0; }
+  }
+
+  #permission-screen, #main-screen { position:relative; z-index:1; }
   #permission-screen {
-    position: fixed; inset: 0; background: #0f0a1e;
-    display: flex; flex-direction: column; align-items: center; justify-content: center;
-    z-index: 100; padding: 30px; text-align: center;
+    position:fixed; inset:0; background:#0f0a1e;
+    display:flex; flex-direction:column; align-items:center; justify-content:center;
+    z-index:100; padding:30px; text-align:center;
   }
-  #permission-screen h1 { color: #a855f7; margin-bottom: 20px; font-size: 28px; display: flex; align-items: center; gap: 10px; justify-content: center; }
-  #permission-screen p { color: #aaa; margin-bottom: 30px; line-height: 1.5; font-size: 15px; }
+  #permission-screen h1 { color:#a855f7; margin-bottom:20px; font-size:28px; display:flex; align-items:center; gap:10px; justify-content:center; }
+  #permission-screen p { color:#aaa; margin-bottom:30px; line-height:1.5; font-size:15px; }
   .perm-btn {
-    background: linear-gradient(135deg, #a855f7, #7c3aed); color: #fff; border: none;
-    padding: 15px 40px; border-radius: 30px; font-size: 16px; font-weight: 600;
-    cursor: pointer; box-shadow: 0 8px 20px rgba(168, 85, 247, 0.4); transition: transform 0.1s;
+    background:linear-gradient(135deg, #a855f7, #7c3aed); color:#fff; border:none;
+    padding:15px 40px; border-radius:30px; font-size:16px; font-weight:600;
+    cursor:pointer; box-shadow:0 8px 20px rgba(168,85,247,0.4); transition:transform 0.1s;
   }
-  .perm-btn:active { transform: scale(0.97); }
+  .perm-btn:active { transform:scale(0.97); }
 
-  #main-screen { display: none; width: 100%; max-width: 400px; text-align: center; }
-  .logo { font-size: 30px; font-weight: 800; color: #a855f7; margin-bottom: 35px; letter-spacing: 2px; }
+  #main-screen { display:none; width:100%; max-width:400px; text-align:center; }
+  .logo { font-size:28px; font-weight:800; color:#a855f7; margin-bottom:10px; letter-spacing:2px; }
+  .subtitle { font-size:11px; color:#666; margin-bottom:25px; letter-spacing:1px; text-transform:uppercase; }
 
+  .vpn-wrap { position:relative; margin:0 auto 35px; width:180px; height:180px; }
   .vpn-btn {
-    width: 180px; height: 180px; border-radius: 50%; border: none;
-    background: linear-gradient(145deg, #b565ff, #7c3aed); color: #fff;
-    font-size: 17px; font-weight: 700; cursor: pointer; position: relative;
-    margin: 0 auto 40px; display: flex; flex-direction: column; align-items: center;
-    justify-content: center; gap: 8px;
-    box-shadow: 0 15px 0 #5b21b6, 0 20px 30px rgba(124, 58, 237, 0.5),
+    position:absolute; inset:0; width:180px; height:180px; border-radius:50%; border:none;
+    background:linear-gradient(145deg, #b565ff, #7c3aed); color:#fff;
+    font-size:16px; font-weight:700; cursor:pointer;
+    display:flex; flex-direction:column; align-items:center; justify-content:center; gap:8px;
+    box-shadow: 0 15px 0 #5b21b6, 0 20px 30px rgba(124,58,237,0.5),
       inset 0 -8px 15px rgba(0,0,0,0.3), inset 0 8px 15px rgba(255,255,255,0.3);
-    transition: transform 0.1s ease, box-shadow 0.1s ease;
+    transition:transform 0.1s ease, box-shadow 0.1s ease;
+    z-index:2;
   }
-  .vpn-btn .power-icon { width: 40px; height: 40px; fill: #fff; }
+  .vpn-btn .power-icon { width:38px; height:38px; fill:#fff; }
   .vpn-btn:active {
-    transform: translateY(15px);
-    box-shadow: 0 0 0 #5b21b6, 0 5px 10px rgba(124, 58, 237, 0.5),
+    transform:translateY(15px);
+    box-shadow: 0 0 0 #5b21b6, 0 5px 10px rgba(124,58,237,0.5),
       inset 0 -4px 10px rgba(0,0,0,0.4), inset 0 4px 10px rgba(255,255,255,0.2);
   }
   .vpn-btn.connected {
-    background: linear-gradient(145deg, #22c55e, #16a34a);
-    box-shadow: 0 15px 0 #14532d, 0 20px 30px rgba(34, 197, 94, 0.5),
+    background:linear-gradient(145deg, #22c55e, #16a34a);
+    box-shadow: 0 15px 0 #14532d, 0 20px 30px rgba(34,197,94,0.5),
       inset 0 -8px 15px rgba(0,0,0,0.3), inset 0 8px 15px rgba(255,255,255,0.3);
   }
   .vpn-btn.connected:active {
-    box-shadow: 0 0 0 #14532d, 0 5px 10px rgba(34, 197, 94, 0.5),
+    box-shadow: 0 0 0 #14532d, 0 5px 10px rgba(34,197,94,0.5),
       inset 0 -4px 10px rgba(0,0,0,0.4), inset 0 4px 10px rgba(255,255,255,0.2);
   }
+  .radar { position:absolute; inset:0; border-radius:50%; border:2px solid #a855f7; opacity:0; pointer-events:none; }
+  .radar.active { animation:radar 2s ease-out infinite; }
+  @keyframes radar {
+    0% { transform:scale(1); opacity:0.8; }
+    100% { transform:scale(1.8); opacity:0; }
+  }
 
-  .traffic-box { background: #1a1228; border-radius: 20px; padding: 20px; margin-bottom: 20px; }
-  .traffic-label {
-    display: flex; justify-content: space-between; align-items: center;
-    margin-bottom: 10px; font-size: 14px; color: #aaa;
+  .speed-box { font-size:12px; color:#666; margin-bottom:15px; height:16px; letter-spacing:1px; }
+  .speed-box .speed-val { color:#22c55e; font-weight:700; font-family:monospace; }
+
+  .traffic-box { background:#1a1228; border-radius:20px; padding:18px; margin-bottom:12px; }
+  .traffic-label { display:flex; justify-content:space-between; align-items:center; margin-bottom:10px; font-size:14px; color:#aaa; }
+  .traffic-label span:last-child { color:#a855f7; font-weight:700; }
+  .progress-bar { width:100%; height:10px; background:#2a1f3d; border-radius:10px; overflow:hidden; }
+  .progress-fill { height:100%; width:0%; background:linear-gradient(90deg, #a855f7, #7c3aed); border-radius:10px; transition:width 0.5s ease; }
+
+  .tiles { display:grid; grid-template-columns:1fr 1fr; gap:10px; margin-bottom:12px; }
+  .tile {
+    background:#1a1228; border:1px solid #2a1f3d; border-radius:15px;
+    padding:14px; color:#fff; font-size:13px; font-weight:600;
+    cursor:pointer; display:flex; align-items:center; justify-content:center; gap:8px;
+    transition:all 0.15s;
   }
-  .traffic-label span:last-child { color: #a855f7; font-weight: 700; }
-  .progress-bar { width: 100%; height: 12px; background: #2a1f3d; border-radius: 10px; overflow: hidden; }
-  .progress-fill {
-    height: 100%; width: 0%;
-    background: linear-gradient(90deg, #a855f7, #7c3aed);
-    border-radius: 10px; transition: width 0.5s ease;
-  }
+  .tile:active { transform:scale(0.97); background:#241833; }
+  .tile svg { width:16px; height:16px; fill:#a855f7; }
 
   .recharge-btn {
-    background: linear-gradient(135deg, #f59e0b, #d97706); color: #fff; border: none;
-    padding: 14px 30px; border-radius: 15px; font-size: 15px; font-weight: 600;
-    cursor: pointer; width: 100%; display: flex; align-items: center;
-    justify-content: center; gap: 8px;
-    box-shadow: 0 5px 0 #92400e; transition: transform 0.1s, box-shadow 0.1s;
+    background:linear-gradient(135deg, #f59e0b, #d97706); color:#fff; border:none;
+    padding:14px 30px; border-radius:15px; font-size:15px; font-weight:600;
+    cursor:pointer; width:100%; display:flex; align-items:center;
+    justify-content:center; gap:8px;
+    box-shadow:0 5px 0 #92400e; transition:transform 0.1s, box-shadow 0.1s;
   }
-  .recharge-btn:active { transform: translateY(5px); box-shadow: 0 0 0 #92400e; }
-  .recharge-btn .ad-icon { width: 20px; height: 20px; fill: #fff; }
+  .recharge-btn:active { transform:translateY(5px); box-shadow:0 0 0 #92400e; }
+  .recharge-btn .ad-icon { width:20px; height:20px; fill:#fff; }
 
-  #ad-modal {
-    position: fixed; inset: 0; background: rgba(0,0,0,0.85);
-    display: none; align-items: center; justify-content: center;
-    z-index: 200; padding: 20px;
+  .server-pill {
+    background:#1a1228; border-radius:15px; padding:12px 16px; margin-bottom:12px;
+    display:flex; align-items:center; justify-content:space-between;
+    cursor:pointer; font-size:14px;
   }
-  #ad-modal.active { display: flex; }
+  .server-pill .flag { font-size:20px; margin-right:8px; }
+  .server-pill .ping { color:#22c55e; font-size:12px; font-family:monospace; }
+  .server-pill .arrow { color:#666; }
+
+  .status-line { margin-top:12px; font-size:11px; color:#555; min-height:14px; }
+
+  .modal {
+    position:fixed; inset:0; background:rgba(0,0,0,0.88);
+    display:none; align-items:center; justify-content:center;
+    z-index:200; padding:20px;
+  }
+  .modal.active { display:flex; }
+  .modal-box {
+    background:#1a1228; border-radius:25px; padding:25px;
+    text-align:center; max-width:360px; width:100%;
+    animation:pop 0.3s ease; max-height:85vh; overflow-y:auto;
+  }
+  @keyframes pop { from { transform:scale(0.85); opacity:0; } to { transform:scale(1); opacity:1; } }
+  .modal-box h2 { font-size:20px; margin-bottom:15px; display:flex; align-items:center; justify-content:center; gap:10px; color:#a855f7; }
+  .modal-close {
+    background:#2a1f3d; border:none; color:#aaa; padding:10px 25px;
+    border-radius:12px; font-size:14px; cursor:pointer; margin-top:15px;
+  }
+  .modal-close:active { background:#3a2a50; }
+
   .ad-content {
-    background: linear-gradient(135deg, #7c3aed, #a855f7);
-    border-radius: 25px; padding: 40px 25px; text-align: center;
-    max-width: 340px; width: 100%; animation: pop 0.3s ease;
+    background:linear-gradient(135deg, #7c3aed, #a855f7);
+    border-radius:25px; padding:35px 25px; text-align:center;
+    max-width:340px; width:100%; animation:pop 0.3s ease;
   }
-  @keyframes pop { from { transform: scale(0.8); opacity: 0; } to { transform: scale(1); opacity: 1; } }
-  .ad-content h2 { font-size: 26px; margin-bottom: 15px; display: flex; align-items: center; justify-content: center; gap: 10px; }
-  .ad-content p { font-size: 15px; opacity: 0.9; margin-bottom: 25px; }
-  .ad-timer { font-size: 48px; font-weight: 800; margin-bottom: 20px; color: #fbbf24; }
+  .ad-content h2 { font-size:24px; margin-bottom:15px; display:flex; align-items:center; justify-content:center; gap:10px; }
+  .ad-content p { font-size:14px; opacity:0.9; margin-bottom:20px; }
+  .ad-timer { font-size:44px; font-weight:800; margin-bottom:15px; color:#fbbf24; }
   .ad-close {
-    background: rgba(255,255,255,0.2); border: none; color: #fff;
-    padding: 12px 30px; border-radius: 15px; font-size: 15px;
-    cursor: not-allowed; opacity: 0.5; transition: all 0.2s;
+    background:rgba(255,255,255,0.2); border:none; color:#fff;
+    padding:12px 30px; border-radius:15px; font-size:14px;
+    cursor:not-allowed; opacity:0.5; transition:all 0.2s;
   }
-  .ad-close.ready { background: #fff; color: #7c3aed; cursor: pointer; opacity: 1; font-weight: 700; }
+  .ad-close.ready { background:#fff; color:#7c3aed; cursor:pointer; opacity:1; font-weight:700; }
 
-  .status-line { margin-top: 20px; font-size: 12px; color: #555; min-height: 16px; }
-
-  .reset-btn {
-    margin-top: 12px; background: transparent; border: 1px solid #333;
-    color: #666; padding: 8px 16px; border-radius: 10px;
-    font-size: 12px; cursor: pointer;
+  .wheel-container { position:relative; width:260px; height:260px; margin:0 auto 20px; }
+  .wheel {
+    width:100%; height:100%; border-radius:50%;
+    transition:transform 4s cubic-bezier(0.17, 0.67, 0.12, 1);
+    box-shadow:0 0 30px rgba(168,85,247,0.5), inset 0 0 20px rgba(0,0,0,0.4);
+    position:relative; overflow:hidden;
   }
+  .wheel-segment {
+    position:absolute; top:0; left:50%; width:50%; height:50%;
+    transform-origin:0 100%; display:flex; align-items:center;
+    padding-left:20px; font-size:11px; font-weight:700; color:#fff;
+    text-shadow:0 1px 2px rgba(0,0,0,0.5);
+  }
+  .wheel-pointer {
+    position:absolute; top:-10px; left:50%; transform:translateX(-50%);
+    width:0; height:0; border-left:12px solid transparent;
+    border-right:12px solid transparent; border-top:20px solid #fbbf24;
+    z-index:5; filter:drop-shadow(0 2px 4px rgba(0,0,0,0.5));
+  }
+  .spin-btn {
+    background:linear-gradient(135deg, #f59e0b, #d97706); color:#fff;
+    border:none; padding:12px 35px; border-radius:15px; font-size:15px;
+    font-weight:700; cursor:pointer; box-shadow:0 5px 0 #92400e;
+  }
+  .spin-btn:disabled { opacity:0.5; cursor:not-allowed; box-shadow:0 5px 0 #555; background:#555; }
+  .spin-result { margin-top:15px; font-size:16px; font-weight:700; color:#fbbf24; min-height:22px; }
+
+  .chart-wrap { display:flex; align-items:flex-end; justify-content:space-between; height:150px; margin:20px 0 30px; gap:5px; }
+  .chart-bar {
+    flex:1; background:linear-gradient(180deg, #a855f7, #7c3aed);
+    border-radius:8px 8px 0 0; min-height:4px;
+    position:relative; transition:height 0.5s;
+  }
+  .chart-bar-label {
+    position:absolute; bottom:-22px; left:0; right:0;
+    font-size:10px; color:#666; text-align:center;
+  }
+  .chart-bar-val {
+    position:absolute; top:-18px; left:0; right:0;
+    font-size:10px; color:#a855f7; text-align:center; font-weight:700;
+  }
+  .stat-row {
+    display:flex; justify-content:space-between; padding:10px 0;
+    border-bottom:1px solid #2a1f3d; font-size:14px;
+  }
+  .stat-row:last-child { border-bottom:none; }
+  .stat-row span:last-child { color:#a855f7; font-weight:700; }
+
+  .server-item {
+    display:flex; align-items:center; padding:14px; border-radius:15px;
+    background:#241833; margin-bottom:8px; cursor:pointer;
+    border:2px solid transparent; transition:all 0.15s;
+  }
+  .server-item:active { transform:scale(0.98); }
+  .server-item.selected { border-color:#a855f7; background:#2a1f3d; }
+  .server-item .flag { font-size:24px; margin-right:12px; }
+  .server-item .name { flex:1; text-align:left; font-weight:600; }
+  .server-item .ping { font-size:12px; color:#22c55e; font-family:monospace; }
+  .server-item .check { color:#a855f7; margin-left:8px; display:none; }
+  .server-item.selected .check { display:inline; }
 </style>
 </head>
 <body>
 
-<!-- SVG-иконки (определения) -->
+<div id="particles"></div>
+
 <svg style="display:none">
-  <symbol id="i-shield" viewBox="0 0 24 24">
-    <path d="M12 2L4 5v6c0 5 3.4 9.4 8 11 4.6-1.6 8-6 8-11V5l-8-3z"/>
-    <path d="M10 12l2 2 4-4" stroke="#0f0a1e" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
-  </symbol>
-  <symbol id="i-power" viewBox="0 0 24 24">
-    <path d="M13 3h-2v10h2V3zm4.83 2.17l-1.42 1.42A6.92 6.92 0 0 1 19 12c0 3.87-3.13 7-7 7s-7-3.13-7-7c0-2.17 1.01-4.1 2.58-5.42L6.17 5.17A8.93 8.93 0 0 0 3 12c0 4.97 4.03 9 9 9s9-4.03 9-9c0-2.74-1.23-5.18-3.17-6.83z"/>
-  </symbol>
-  <symbol id="i-ad" viewBox="0 0 24 24">
-    <path d="M21 3H3c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h5v2h8v-2h5c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm0 14H3V5h18v12z"/>
-    <path d="M8 8v6h2v-2h2v2h2V8h-2v2h-2V8z"/>
-  </symbol>
-  <symbol id="i-check" viewBox="0 0 24 24">
-    <path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/>
-  </symbol>
-  <symbol id="i-refresh" viewBox="0 0 24 24">
-    <path d="M17.65 6.35A7.95 7.95 0 0 0 12 4c-4.42 0-7.99 3.58-8 8s3.58 8 8 8c3.73 0 6.84-2.55 7.73-6h-2.08A5.99 5.99 0 0 1 12 18c-3.31 0-6-2.69-6-6s2.69-6 6-6c1.66 0 3.14.69 4.22 1.78L13 11h7V4l-2.35 2.35z"/>
-  </symbol>
-  <symbol id="i-traffic" viewBox="0 0 24 24">
-    <path d="M16 6l2.29 2.29-4.88 4.88-4-4L2 16.59 3.41 18l6-6 4 4 6.3-6.29L22 12V6z"/>
-  </symbol>
+  <symbol id="i-shield" viewBox="0 0 24 24"><path d="M12 2L4 5v6c0 5 3.4 9.4 8 11 4.6-1.6 8-6 8-11V5l-8-3z"/></symbol>
+  <symbol id="i-power" viewBox="0 0 24 24"><path d="M13 3h-2v10h2V3zm4.83 2.17l-1.42 1.42A6.92 6.92 0 0 1 19 12c0 3.87-3.13 7-7 7s-7-3.13-7-7c0-2.17 1.01-4.1 2.58-5.42L6.17 5.17A8.93 8.93 0 0 0 3 12c0 4.97 4.03 9 9 9s9-4.03 9-9c0-2.74-1.23-5.18-3.17-6.83z"/></symbol>
+  <symbol id="i-ad" viewBox="0 0 24 24"><path d="M21 3H3c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h5v2h8v-2h5c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm0 14H3V5h18v12z"/></symbol>
+  <symbol id="i-chart" viewBox="0 0 24 24"><path d="M5 9.2h3V19H5zM10.6 5h2.8v14h-2.8zm5.6 8H19v6h-2.8z"/></symbol>
+  <symbol id="i-wheel" viewBox="0 0 24 24"><path d="M12 2a10 10 0 1 0 0 20 10 10 0 0 0 0-20zm0 3.5c1.5 0 2.9.5 4 1.4l-3 2.5-1-.9-1 .9-3-2.5A6.5 6.5 0 0 1 12 5.5zm-6 3.9l3.5 2.9-.6 2 1.8 1.3-.3 2.6a6.5 6.5 0 0 1-4.4-8.8zm12 0a6.5 6.5 0 0 1-4.4 8.8l-.3-2.6 1.8-1.3-.6-2L18 9.4zm-6 6.8l.8-.6.5.2.6-.7a6.5 6.5 0 0 1-2 1.1z"/></symbol>
+  <symbol id="i-globe" viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 17.93c-3.94-.49-7-3.85-7-7.93 0-.62.08-1.21.21-1.79L9 15v1c0 1.1.9 2 2 2v1.93zm6.9-2.54c-.26-.81-1-1.39-1.9-1.39h-1v-3c0-.55-.45-1-1-1H8v-2h2c.55 0 1-.45 1-1V7h2c1.1 0 2-.9 2-2v-.41c2.93 1.19 5 4.06 5 7.41 0 2.08-.8 3.97-2.1 5.39z"/></symbol>
+  <symbol id="i-close" viewBox="0 0 24 24"><path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></symbol>
 </svg>
 
-<!-- ЭКРАН РАЗРЕШЕНИЯ -->
 <div id="permission-screen">
   <h1><svg class="icon" style="width:32px;height:32px;fill:#a855f7"><use href="#i-shield"/></svg> Zuno VPN</h1>
-  <p>Для работы приложения разрешите<br>показ уведомлений и доступ к трафику</p>
+  <p>Виртуальный VPN-симулятор.<br>Разрешите уведомления и подключитесь.</p>
   <button class="perm-btn" onclick="grantPermission()">Разрешить</button>
   <div class="status-line" id="permStatus"></div>
 </div>
 
-<!-- ГЛАВНЫЙ ЭКРАН -->
 <div id="main-screen">
   <div class="logo">ZUNO VPN</div>
+  <div class="subtitle">Simulator · не настоящий VPN</div>
 
-  <button class="vpn-btn" id="vpnBtn" onclick="toggleVPN()">
-    <svg class="power-icon"><use href="#i-power"/></svg>
-    <span id="vpnBtnText">Подключить VPN</span>
-  </button>
+  <div class="vpn-wrap">
+    <div class="radar" id="radar"></div>
+    <button class="vpn-btn" id="vpnBtn" onclick="toggleVPN()">
+      <svg class="power-icon"><use href="#i-power"/></svg>
+      <span id="vpnBtnText">Подключить VPN</span>
+    </button>
+  </div>
+
+  <div class="speed-box" id="speedBox">
+    <span id="speedText">— не подключено —</span>
+  </div>
+
+  <div class="server-pill" onclick="openServers()">
+    <span><span class="flag" id="curFlag">🇳🇱</span><span id="curServer">Нидерланды</span></span>
+    <span><span class="ping" id="curPing">12 ms</span> <span class="arrow">›</span></span>
+  </div>
 
   <div class="traffic-box">
     <div class="traffic-label">
-      <span><svg class="icon" style="fill:#a855f7"><use href="#i-traffic"/></svg> Трафик</span>
+      <span><svg class="icon" style="fill:#a855f7"><use href="#i-chart"/></svg> Трафик</span>
       <span id="trafficText">0 МБ / 30.0 ГБ</span>
     </div>
-    <div class="progress-bar">
-      <div class="progress-fill" id="progressFill"></div>
-    </div>
+    <div class="progress-bar"><div class="progress-fill" id="progressFill"></div></div>
+  </div>
+
+  <div class="tiles">
+    <button class="tile" onclick="openWheel()">
+      <svg><use href="#i-wheel"/></svg> Колесо удачи
+    </button>
+    <button class="tile" onclick="openStats()">
+      <svg><use href="#i-chart"/></svg> Статистика
+    </button>
   </div>
 
   <button class="recharge-btn" onclick="showAd()">
@@ -170,75 +276,82 @@
   </button>
 
   <div class="status-line" id="mainStatus"></div>
-  <button class="reset-btn" onclick="resetProgress()">
-    <svg class="icon" style="width:12px;height:12px"><use href="#i-refresh"/></svg> Сбросить прогресс
-  </button>
 </div>
 
-<!-- МОДАЛКА РЕКЛАМЫ -->
-<div id="ad-modal">
+<div class="modal" id="ad-modal">
   <div class="ad-content">
-    <h2><svg class="icon" style="width:28px;height:28px;fill:#fff"><use href="#i-shield"/></svg> Zuno VPN</h2>
+    <h2><svg class="icon" style="width:26px;height:26px;fill:#fff"><use href="#i-shield"/></svg> Zuno VPN</h2>
     <p>Лучший VPN для твоего телефона!</p>
     <div class="ad-timer" id="adTimer">25</div>
     <button class="ad-close" id="adClose" onclick="closeAd()">Закрыть</button>
   </div>
 </div>
 
+<div class="modal" id="wheel-modal">
+  <div class="modal-box">
+    <h2><svg class="icon" style="width:22px;height:22px;fill:#a855f7"><use href="#i-wheel"/></svg> Колесо удачи</h2>
+    <p style="font-size:13px;color:#aaa;margin-bottom:20px;">Раз в день — бесплатно!</p>
+    <div class="wheel-container">
+      <div class="wheel-pointer"></div>
+      <div class="wheel" id="wheel"></div>
+    </div>
+    <button class="spin-btn" id="spinBtn" onclick="spinWheel()">Крутить</button>
+    <div class="spin-result" id="spinResult"></div>
+    <button class="modal-close" onclick="closeModal('wheel-modal')">Закрыть</button>
+  </div>
+</div>
+
+<div class="modal" id="stats-modal">
+  <div class="modal-box">
+    <h2><svg class="icon" style="width:22px;height:22px;fill:#a855f7"><use href="#i-chart"/></svg> Статистика</h2>
+    <div class="chart-wrap" id="chart"></div>
+    <div class="stat-row"><span>Всего потрачено</span><span id="statTotal">0 МБ</span></div>
+    <div class="stat-row"><span>Сессий подключения</span><span id="statSessions">0</span></div>
+    <div class="stat-row"><span>Реклам просмотрено</span><span id="statAds">0</span></div>
+    <div class="stat-row"><span>Дней подряд</span><span id="statStreak">1</span></div>
+    <button class="modal-close" onclick="closeModal('stats-modal')">Закрыть</button>
+  </div>
+</div>
+
+<div class="modal" id="servers-modal">
+  <div class="modal-box">
+    <h2><svg class="icon" style="width:22px;height:22px;fill:#a855f7"><use href="#i-globe"/></svg> Выбор сервера</h2>
+    <div id="serverList"></div>
+    <button class="modal-close" onclick="closeModal('servers-modal')">Закрыть</button>
+  </div>
+</div>
+
 <script>
-  // === Сохранение в localStorage ===
-  const STORAGE_KEY = 'zuno_vpn_state';
+   // ==================== СОСТОЯНИЕ ====================
+  const STORAGE_KEY = 'zuno_vpn_v2';
+  const SERVERS = [
+    { code:'NL', flag:'🇳🇱', name:'Нидерланды', ping:12 },
+    { code:'DE', flag:'🇩🇪', name:'Германия', ping:24 },
+    { code:'US', flag:'🇺🇸', name:'США', ping:87 },
+    { code:'JP', flag:'🇯🇵', name:'Япония', ping:142 },
+    { code:'RU', flag:'🇷🇺', name:'Россия', ping:8 }
+  ];
   const DEFAULT_STATE = {
-    usedMB: 0,
-    totalMB: 30 * 1024,   // 30 ГБ
-    maxMB: 200 * 1024,    // 200 ГБ
-    connected: false
+    usedMB:0, totalMB:30*1024, maxMB:200*1024,
+    connected:false, serverCode:'NL',
+    sessions:0, adsWatched:0,
+    lastSpinDate:null, lastVisit:null, streak:1,
+    history:[]
   };
 
   function loadState() {
     try {
       const raw = localStorage.getItem(STORAGE_KEY);
       if (!raw) return { ...DEFAULT_STATE };
-      const parsed = JSON.parse(raw);
-      return { ...DEFAULT_STATE, ...parsed };
-    } catch (e) {
-      console.warn('Ошибка загрузки состояния:', e);
-      return { ...DEFAULT_STATE };
-    }
+      return { ...DEFAULT_STATE, ...JSON.parse(raw) };
+    } catch(e) { return { ...DEFAULT_STATE }; }
   }
-
   function saveState() {
-    try {
-      localStorage.setItem(STORAGE_KEY, JSON.stringify({
-        usedMB: state.usedMB,
-        totalMB: state.totalMB,
-        maxMB: state.maxMB,
-        connected: state.connected
-      }));
-    } catch (e) {
-      console.warn('Ошибка сохранения:', e);
-    }
+    try { localStorage.setItem(STORAGE_KEY, JSON.stringify(state)); } catch(e){}
   }
 
-  function resetProgress() {
-    if (!confirm('Сбросить весь прогресс? Трафик вернётся к 30 ГБ.')) return;
-    localStorage.removeItem(STORAGE_KEY);
-    Object.assign(state, DEFAULT_STATE);
-    if (state.connected) {
-      state.connected = false;
-      document.getElementById('vpnBtn').classList.remove('connected');
-    }
-    stopTraffic();
-    updateVPNBtn();
-    updateTrafficUI();
-    log('Прогресс сброшен');
-  }
-
-  // === Состояние ===
   let state = loadState();
-  let interval = null;
-  let notificationInterval = null;
-
+  let interval = null, notificationInterval = null, speedInterval = null;
   const MB_PER_TICK = 1;
   const TICK_MS = 200;
 
@@ -248,24 +361,50 @@
     if (el) el.textContent = msg;
   }
 
-  // === Разрешение ===
+  function updateStreak() {
+    const today = new Date().toISOString().slice(0,10);
+    if (state.lastVisit === today) return;
+    const yesterday = new Date(Date.now() - 86400000).toISOString().slice(0,10);
+    if (state.lastVisit === yesterday) state.streak = (state.streak||1) + 1;
+    else state.streak = 1;
+    state.lastVisit = today;
+    saveState();
+  }
+
+  function addToHistory(mb) {
+    const today = new Date().toISOString().slice(0,10);
+    let item = state.history.find(h => h.date === today);
+    if (item) item.mb += mb;
+    else state.history.push({ date:today, mb:mb });
+    if (state.history.length > 7) state.history = state.history.slice(-7);
+    saveState();
+  }
+
+  function initParticles() {
+    const box = document.getElementById('particles');
+    for (let i = 0; i < 20; i++) {
+      const p = document.createElement('div');
+      p.className = 'particle';
+      const size = Math.random()*4 + 2;
+      p.style.width = size + 'px';
+      p.style.height = size + 'px';
+      p.style.left = Math.random()*100 + '%';
+      p.style.bottom = '-10px';
+      p.style.animationDuration = (Math.random()*15 + 10) + 's';
+      p.style.animationDelay = Math.random()*15 + 's';
+      p.style.opacity = Math.random()*0.5 + 0.3;
+      box.appendChild(p);
+    }
+  }
+
   async function grantPermission() {
     log('Запрос разрешения...');
-    if (!('Notification' in window)) {
-      log('Браузер не поддерживает уведомления');
-      enterApp();
-      return;
-    }
+    if (!('Notification' in window)) { log('Уведомления не поддерживаются'); enterApp(); return; }
     const perm = await Notification.requestPermission();
     log('Разрешение: ' + perm);
-
     if ('serviceWorker' in navigator) {
-      try {
-        await navigator.serviceWorker.register('./sw.js');
-        log('SW зарегистрирован');
-      } catch (e) {
-        log('Ошибка SW: ' + e.message);
-      }
+      try { await navigator.serviceWorker.register('./sw.js'); log('SW зарегистрирован'); }
+      catch(e) { log('Ошибка SW: ' + e.message); }
     }
     enterApp();
   }
@@ -273,198 +412,338 @@
   function enterApp() {
     document.getElementById('permission-screen').style.display = 'none';
     document.getElementById('main-screen').style.display = 'block';
-
-    // Восстанавливаем состояние подключения
+    updateStreak();
+    renderServer();
     if (state.connected) {
       document.getElementById('vpnBtn').classList.add('connected');
       updateVPNBtn();
+      document.getElementById('radar').classList.add('active');
       startTraffic();
+      startSpeed();
     } else {
       updateVPNBtn();
     }
     updateTrafficUI();
+    log('');
   }
 
-  // === VPN кнопка ===
   function updateVPNBtn() {
     const btn = document.getElementById('vpnBtn');
     const text = document.getElementById('vpnBtnText');
-    if (state.connected) {
-      btn.classList.add('connected');
-      text.textContent = 'Отключить VPN';
-    } else {
-      btn.classList.remove('connected');
-      text.textContent = 'Подключить VPN';
-    }
+    if (state.connected) { btn.classList.add('connected'); text.textContent = 'Отключить VPN'; }
+    else { btn.classList.remove('connected'); text.textContent = 'Подключить VPN'; }
   }
 
   function toggleVPN() {
     state.connected = !state.connected;
+    if (state.connected) {
+      state.sessions = (state.sessions||0) + 1;
+      document.getElementById('radar').classList.add('active');
+    } else {
+      document.getElementById('radar').classList.remove('active');
+    }
     saveState();
     updateVPNBtn();
-
     if (state.connected) {
-      startTraffic();
+      startTraffic(); startSpeed();
       showNotification(
         'VPN подключение активно',
-        'Трафик: ' + formatTraffic(state.usedMB) + ' / ' + formatTraffic(state.totalMB)
+        'Сервер: ' + getServer().name + ' · ' + formatTraffic(state.usedMB) + ' / ' + formatTraffic(state.totalMB),
+        { actions:[
+          { action:'disconnect', title:'Отключить' },
+          { action:'open_recharge', title:'+ Пополнить' }
+        ]}
       );
     } else {
-      stopTraffic();
+      stopTraffic(); stopSpeed();
       showNotification('VPN отключён', 'Соединение разорвано');
     }
   }
 
-  // === Счётчик трафика ===
+  function getServer() {
+    return SERVERS.find(s => s.code === state.serverCode) || SERVERS[0];
+  }
+
+  function startSpeed() { stopSpeed(); updateSpeed(); speedInterval = setInterval(updateSpeed, 1500); }
+  function stopSpeed() {
+    if (speedInterval) clearInterval(speedInterval);
+    speedInterval = null;
+    const el = document.getElementById('speedText');
+    if (el) el.innerHTML = '— не подключено —';
+  }
+  function updateSpeed() {
+    if (!state.connected) return;
+    const server = getServer();
+    const base = 100 - Math.min(server.ping, 90);
+    const speed = (base * (0.5 + Math.random()*0.8)).toFixed(1);
+    const down = (speed * (0.7 + Math.random()*0.5)).toFixed(1);
+    document.getElementById('speedText').innerHTML =
+      '<span class="speed-val">↑ ' + speed + ' Мбит/с</span> &nbsp; <span class="speed-val">↓ ' + down + ' Мбит/с</span>';
+  }
+
   function startTraffic() {
     stopTraffic();
     interval = setInterval(() => {
       state.usedMB += MB_PER_TICK;
-
       if (state.usedMB >= state.totalMB) {
         state.usedMB = state.totalMB;
-        stopTraffic();
+        stopTraffic(); stopSpeed();
         state.connected = false;
-        saveState();
-        updateVPNBtn();
+        document.getElementById('radar').classList.remove('active');
+        saveState(); updateVPNBtn();
         showNotification('Трафик исчерпан', 'Пополните баланс для продолжения');
       }
-
-      // Сохраняем каждые 20 тиков (≈4 сек), чтобы не грузить localStorage
-      if (Math.floor(state.usedMB) % 20 === 0) saveState();
-
+      if (Math.floor(state.usedMB) % 20 === 0) { addToHistory(1); saveState(); }
       updateTrafficUI();
     }, TICK_MS);
 
     notificationInterval = setInterval(() => {
       if (state.connected) {
         showNotification(
-          'VPN подключение активно',
-          'Трафик: ' + formatTraffic(state.usedMB) + ' / ' + formatTraffic(state.totalMB)
+          'VPN активен · ' + getServer().name,
+          'Трафик: ' + formatTraffic(state.usedMB) + ' / ' + formatTraffic(state.totalMB),
+          { actions:[
+            { action:'disconnect', title:'Отключить' },
+            { action:'open_recharge', title:'+ Пополнить' }
+          ]}
         );
       }
-    }, 10000);
+    }, 8000);
   }
-
   function stopTraffic() {
     if (interval) clearInterval(interval);
     if (notificationInterval) clearInterval(notificationInterval);
-    interval = null;
-    notificationInterval = null;
+    interval = null; notificationInterval = null;
   }
-
   function updateTrafficUI() {
     document.getElementById('trafficText').textContent =
       formatTraffic(state.usedMB) + ' / ' + formatTraffic(state.totalMB);
     const percent = (state.usedMB / state.totalMB) * 100;
     document.getElementById('progressFill').style.width = percent + '%';
   }
-
   function formatTraffic(mb) {
-    if (mb >= 1024) return (mb / 1024).toFixed(1) + ' ГБ';
+    if (mb >= 1024) return (mb/1024).toFixed(1) + ' ГБ';
     return Math.floor(mb) + ' МБ';
   }
 
-  // === Уведомления ===
-  async function showNotification(title, body) {
+  async function showNotification(title, body, opts = {}) {
     if (!('Notification' in window)) return;
     if (Notification.permission !== 'granted') return;
-
     const iconUrl = 'data:image/svg+xml,' + encodeURIComponent(
       '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><circle cx="50" cy="50" r="45" fill="#a855f7"/><text x="50" y="68" font-size="55" text-anchor="middle" fill="white" font-family="sans-serif" font-weight="bold">Z</text></svg>'
     );
-
+    const options = {
+      body: body, icon: iconUrl, badge: iconUrl,
+      renotify: false, silent: false,
+      vibrate: state.connected ? [80,40,80] : [40],
+      actions: opts.actions || []
+    };
     try {
       if ('serviceWorker' in navigator) {
         const reg = await navigator.serviceWorker.ready;
-        await reg.showNotification(title, {
-          body: body,
-          icon: iconUrl,
-          badge: iconUrl,
-          tag: 'vpn-status',
-          renotify: true
-        });
+        const old = await reg.getNotifications();
+        old.forEach(n => { try { n.close(); } catch(e){} });
+        await reg.showNotification(title, options);
       } else {
-        new Notification(title, { body: body, icon: iconUrl });
+        new Notification(title, options);
       }
-      log('Уведомление отправлено');
-    } catch (e) {
-      log('Ошибка уведомления: ' + e.message);
-    }
+      log('Уведомление: ' + title);
+    } catch(e) { log('Ошибка уведомления: ' + e.message); }
   }
 
-  // === Реклама (ИСПРАВЛЕНО) ===
-  let adInterval = null;
-  let adReady = false;
-
+  let adInterval = null, adReady = false;
   function showAd() {
-    if (state.totalMB >= state.maxMB) {
-      alert('Достигнут максимум 200 ГБ!');
-      return;
-    }
-
+    if (state.totalMB >= state.maxMB) { alert('Достигнут максимум 200 ГБ'); return; }
     const modal = document.getElementById('ad-modal');
     const timerEl = document.getElementById('adTimer');
     const closeBtn = document.getElementById('adClose');
-
     modal.classList.add('active');
     adReady = false;
-    let timeLeft = 25;
-    timerEl.textContent = timeLeft;
+    let t = 25;
+    timerEl.textContent = t;
     closeBtn.classList.remove('ready');
-    closeBtn.textContent = 'Закрыть (25)';
-
+    closeBtn.textContent = 'Закрыть (' + t + ')';
     if (adInterval) clearInterval(adInterval);
     adInterval = setInterval(() => {
-      timeLeft--;
-      timerEl.textContent = timeLeft;
-      closeBtn.textContent = 'Закрыть (' + timeLeft + ')';
-
-      if (timeLeft <= 0) {
-        clearInterval(adInterval);
-        adInterval = null;
-        adReady = true;
+      t--;
+      timerEl.textContent = t;
+      closeBtn.textContent = 'Закрыть (' + t + ')';
+      if (t <= 0) {
+        clearInterval(adInterval); adInterval = null; adReady = true;
         closeBtn.classList.add('ready');
         closeBtn.textContent = 'Получить +10 ГБ';
       }
     }, 1000);
   }
-
   function closeAd() {
-    if (!adReady) return;  // рано закрывать нельзя
-
+    if (!adReady) return;
     if (adInterval) { clearInterval(adInterval); adInterval = null; }
     document.getElementById('ad-modal').classList.remove('active');
-
-    const addMB = 10 * 1024;
     const before = state.totalMB;
-    state.totalMB = Math.min(state.totalMB + addMB, state.maxMB);
+    state.totalMB = Math.min(state.totalMB + 10*1024, state.maxMB);
     const added = state.totalMB - before;
-
-    saveState();
-    updateTrafficUI();
-
-    showNotification(
-      'Трафик пополнен',
-      '+' + formatTraffic(added) + '. Всего: ' + formatTraffic(state.totalMB)
-    );
+    state.adsWatched = (state.adsWatched||0) + 1;
+    saveState(); updateTrafficUI();
+    showNotification('Трафик пополнен', '+' + formatTraffic(added) + '. Всего: ' + formatTraffic(state.totalMB));
     log('Пополнено: +' + formatTraffic(added));
   }
 
-  // === Слушатель сообщений от SW (для кнопок в уведомлении) ===
-  if ('serviceWorker' in navigator) {
-    navigator.serviceWorker.addEventListener('message', (event) => {
-      if (event.data && event.data.action === 'disconnect' && state.connected) {
-        toggleVPN();
+  const WHEEL_PRIZES = [
+    { label:'100 МБ', mb:100, color:'#7c3aed' },
+    { label:'Пусто', mb:0, color:'#3a2a50' },
+    { label:'500 МБ', mb:500, color:'#a855f7' },
+    { label:'1 ГБ', mb:1024, color:'#22c55e' },
+    { label:'Пусто', mb:0, color:'#3a2a50' },
+    { label:'2 ГБ', mb:2048, color:'#f59e0b' },
+    { label:'250 МБ', mb:250, color:'#7c3aed' },
+    { label:'5 ГБ', mb:5120, color:'#ef4444' }
+  ];
+  let wheelRotation = 0;
+
+  function openWheel() {
+    buildWheel();
+    const today = new Date().toISOString().slice(0,10);
+    const btn = document.getElementById('spinBtn');
+    if (state.lastSpinDate === today) {
+      btn.disabled = true;
+      btn.textContent = 'Приходи завтра';
+      document.getElementById('spinResult').textContent = 'Сегодня уже крутил!';
+    } else {
+      btn.disabled = false;
+      btn.textContent = 'Крутить';
+      document.getElementById('spinResult').textContent = '';
+    }
+    document.getElementById('wheel-modal').classList.add('active');
+  }
+
+  function buildWheel() {
+    const wheel = document.getElementById('wheel');
+    wheel.innerHTML = '';
+    const n = WHEEL_PRIZES.length;
+    const angle = 360 / n;
+    WHEEL_PRIZES.forEach((p, i) => {
+      const seg = document.createElement('div');
+      seg.className = 'wheel-segment';
+      seg.style.background = p.color;
+      seg.style.transform = 'rotate(' + (i * angle) + 'deg) skewY(' + (90 - angle) + 'deg)';
+      seg.textContent = p.label;
+      wheel.appendChild(seg);
+    });
+    wheel.style.transform = 'rotate(' + wheelRotation + 'deg)';
+  }
+
+  function spinWheel() {
+    const today = new Date().toISOString().slice(0,10);
+    if (state.lastSpinDate === today) return;
+    const btn = document.getElementById('spinBtn');
+    btn.disabled = true;
+    btn.textContent = 'Крутится...';
+    const n = WHEEL_PRIZES.length;
+    const segAngle = 360 / n;
+    const winIndex = Math.floor(Math.random() * n);
+    const targetAngle = 360 * 5 + (360 - winIndex * segAngle - segAngle/2);
+    wheelRotation += targetAngle;
+    document.getElementById('wheel').style.transform = 'rotate(' + wheelRotation + 'deg)';
+    setTimeout(() => {
+      const prize = WHEEL_PRIZES[winIndex];
+      const resEl = document.getElementById('spinResult');
+      if (prize.mb > 0) {
+        const before = state.totalMB;
+        state.totalMB = Math.min(state.totalMB + prize.mb, state.maxMB);
+        const added = state.totalMB - before;
+        resEl.textContent = 'Выпало: ' + prize.label + '!';
+        showNotification('Колесо удачи', 'Выигрыш: ' + prize.label);
+        updateTrafficUI();
+      } else {
+        resEl.textContent = 'Пусто. Повезёт завтра!';
+        showNotification('Колесо удачи', 'Увы, пусто. Попробуй завтра!');
       }
+      state.lastSpinDate = today;
+      saveState();
+      btn.textContent = 'Приходи завтра';
+    }, 4200);
+  }
+
+  function openStats() {
+    renderChart();
+    document.getElementById('statTotal').textContent = formatTraffic(state.usedMB);
+    document.getElementById('statSessions').textContent = state.sessions || 0;
+    document.getElementById('statAds').textContent = state.adsWatched || 0;
+    document.getElementById('statStreak').textContent = (state.streak||1) + ' дн.';
+    document.getElementById('stats-modal').classList.add('active');
+  }
+
+  function renderChart() {
+    const chart = document.getElementById('chart');
+    chart.innerHTML = '';
+    const days = [];
+    for (let i = 6; i >= 0; i--) {
+      const d = new Date(Date.now() - i*86400000);
+      days.push({ date:d.toISOString().slice(0,10), label:['Вс','Пн','Вт','Ср','Чт','Пт','Сб'][d.getDay()] });
+    }
+    const data = days.map(d => {
+      const h = state.history.find(x => x.date === d.date);
+      return { ...d, mb: h ? h.mb : 0 };
+    });
+    const max = Math.max(...data.map(d => d.mb), 1);
+    data.forEach(d => {
+      const bar = document.createElement('div');
+      bar.className = 'chart-bar';
+      const height = (d.mb / max) * 100;
+      bar.style.height = Math.max(height, 3) + '%';
+      bar.innerHTML = '<div class="chart-bar-val">' + (d.mb > 0 ? Math.round(d.mb) : '') + '</div>' +
+                      '<div class="chart-bar-label">' + d.label + '</div>';
+      chart.appendChild(bar);
     });
   }
 
-  // === Автосохранение при уходе со страницы ===
+  function openServers() {
+    const list = document.getElementById('serverList');
+    list.innerHTML = '';
+    SERVERS.forEach(s => {
+      const item = document.createElement('div');
+      item.className = 'server-item' + (s.code === state.serverCode ? ' selected' : '');
+      item.innerHTML =
+        '<span class="flag">' + s.flag + '</span>' +
+        '<span class="name">' + s.name + '</span>' +
+        '<span class="ping">' + s.ping + ' ms</span>' +
+        '<span class="check">✓</span>';
+      item.onclick = () => {
+        state.serverCode = s.code;
+        saveState();
+        renderServer();
+        closeModal('servers-modal');
+        if (state.connected) {
+          updateSpeed();
+          showNotification('Сервер изменён', 'Подключено: ' + s.name);
+        }
+      };
+      list.appendChild(item);
+    });
+    document.getElementById('servers-modal').classList.add('active');
+  }
+
+  function renderServer() {
+    const s = getServer();
+    document.getElementById('curFlag').textContent = s.flag;
+    document.getElementById('curServer').textContent = s.name;
+    document.getElementById('curPing').textContent = s.ping + ' ms';
+  }
+
+  function closeModal(id) { document.getElementById(id).classList.remove('active'); }
+
+  if ('serviceWorker' in navigator) {
+    navigator.serviceWorker.addEventListener('message', (event) => {
+      if (!event.data) return;
+      if (event.data.action === 'disconnect' && state.connected) toggleVPN();
+      if (event.data.action === 'open_recharge') showAd();
+    });
+  }
+
   window.addEventListener('beforeunload', saveState);
-  document.addEventListener('visibilitychange', () => {
-    if (document.hidden) saveState();
-  });
+  document.addEventListener('visibilitychange', () => { if (document.hidden) saveState(); });
+
+  initParticles();
 </script>
 </body>
- </html>
+</html>
