@@ -8,216 +8,138 @@
 <style>
   * { margin: 0; padding: 0; box-sizing: border-box; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; -webkit-tap-highlight-color: transparent; }
   body {
-    background: #0f0a1e;
-    color: #fff;
-    min-height: 100vh;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    padding: 20px;
-    overflow-x: hidden;
-    user-select: none;
+    background: #0f0a1e; color: #fff; min-height: 100vh;
+    display: flex; flex-direction: column; align-items: center; justify-content: center;
+    padding: 20px; overflow-x: hidden; user-select: none;
   }
+  .icon { display: inline-block; vertical-align: middle; width: 1em; height: 1em; fill: currentColor; }
 
-  /* === Экран разрешения === */
   #permission-screen {
-    position: fixed;
-    inset: 0;
-    background: #0f0a1e;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    z-index: 100;
-    padding: 30px;
-    text-align: center;
+    position: fixed; inset: 0; background: #0f0a1e;
+    display: flex; flex-direction: column; align-items: center; justify-content: center;
+    z-index: 100; padding: 30px; text-align: center;
   }
-  #permission-screen h1 { color: #a855f7; margin-bottom: 20px; font-size: 28px; }
+  #permission-screen h1 { color: #a855f7; margin-bottom: 20px; font-size: 28px; display: flex; align-items: center; gap: 10px; justify-content: center; }
   #permission-screen p { color: #aaa; margin-bottom: 30px; line-height: 1.5; font-size: 15px; }
   .perm-btn {
-    background: linear-gradient(135deg, #a855f7, #7c3aed);
-    color: #fff;
-    border: none;
-    padding: 15px 40px;
-    border-radius: 30px;
-    font-size: 16px;
-    font-weight: 600;
-    cursor: pointer;
-    box-shadow: 0 8px 20px rgba(168, 85, 247, 0.4);
-    transition: transform 0.1s;
+    background: linear-gradient(135deg, #a855f7, #7c3aed); color: #fff; border: none;
+    padding: 15px 40px; border-radius: 30px; font-size: 16px; font-weight: 600;
+    cursor: pointer; box-shadow: 0 8px 20px rgba(168, 85, 247, 0.4); transition: transform 0.1s;
   }
   .perm-btn:active { transform: scale(0.97); }
 
-  /* === Главный экран === */
   #main-screen { display: none; width: 100%; max-width: 400px; text-align: center; }
+  .logo { font-size: 30px; font-weight: 800; color: #a855f7; margin-bottom: 35px; letter-spacing: 2px; }
 
-  .logo {
-    font-size: 30px;
-    font-weight: 800;
-    color: #a855f7;
-    margin-bottom: 35px;
-    letter-spacing: 2px;
-  }
-
-  /* === Объёмная кнопка === */
   .vpn-btn {
-    width: 180px;
-    height: 180px;
-    border-radius: 50%;
-    border: none;
-    background: linear-gradient(145deg, #b565ff, #7c3aed);
-    color: #fff;
-    font-size: 18px;
-    font-weight: 700;
-    cursor: pointer;
-    position: relative;
-    margin: 0 auto 40px;
-    display: block;
-    box-shadow:
-      0 15px 0 #5b21b6,
-      0 20px 30px rgba(124, 58, 237, 0.5),
-      inset 0 -8px 15px rgba(0,0,0,0.3),
-      inset 0 8px 15px rgba(255,255,255,0.3);
+    width: 180px; height: 180px; border-radius: 50%; border: none;
+    background: linear-gradient(145deg, #b565ff, #7c3aed); color: #fff;
+    font-size: 17px; font-weight: 700; cursor: pointer; position: relative;
+    margin: 0 auto 40px; display: flex; flex-direction: column; align-items: center;
+    justify-content: center; gap: 8px;
+    box-shadow: 0 15px 0 #5b21b6, 0 20px 30px rgba(124, 58, 237, 0.5),
+      inset 0 -8px 15px rgba(0,0,0,0.3), inset 0 8px 15px rgba(255,255,255,0.3);
     transition: transform 0.1s ease, box-shadow 0.1s ease;
   }
+  .vpn-btn .power-icon { width: 40px; height: 40px; fill: #fff; }
   .vpn-btn:active {
     transform: translateY(15px);
-    box-shadow:
-      0 0 0 #5b21b6,
-      0 5px 10px rgba(124, 58, 237, 0.5),
-      inset 0 -4px 10px rgba(0,0,0,0.4),
-      inset 0 4px 10px rgba(255,255,255,0.2);
+    box-shadow: 0 0 0 #5b21b6, 0 5px 10px rgba(124, 58, 237, 0.5),
+      inset 0 -4px 10px rgba(0,0,0,0.4), inset 0 4px 10px rgba(255,255,255,0.2);
   }
   .vpn-btn.connected {
     background: linear-gradient(145deg, #22c55e, #16a34a);
-    box-shadow:
-      0 15px 0 #14532d,
-      0 20px 30px rgba(34, 197, 94, 0.5),
-      inset 0 -8px 15px rgba(0,0,0,0.3),
-      inset 0 8px 15px rgba(255,255,255,0.3);
+    box-shadow: 0 15px 0 #14532d, 0 20px 30px rgba(34, 197, 94, 0.5),
+      inset 0 -8px 15px rgba(0,0,0,0.3), inset 0 8px 15px rgba(255,255,255,0.3);
   }
   .vpn-btn.connected:active {
-    box-shadow:
-      0 0 0 #14532d,
-      0 5px 10px rgba(34, 197, 94, 0.5),
-      inset 0 -4px 10px rgba(0,0,0,0.4),
-      inset 0 4px 10px rgba(255,255,255,0.2);
+    box-shadow: 0 0 0 #14532d, 0 5px 10px rgba(34, 197, 94, 0.5),
+      inset 0 -4px 10px rgba(0,0,0,0.4), inset 0 4px 10px rgba(255,255,255,0.2);
   }
 
-  /* === Трафик === */
-  .traffic-box {
-    background: #1a1228;
-    border-radius: 20px;
-    padding: 20px;
-    margin-bottom: 20px;
-  }
+  .traffic-box { background: #1a1228; border-radius: 20px; padding: 20px; margin-bottom: 20px; }
   .traffic-label {
-    display: flex;
-    justify-content: space-between;
-    margin-bottom: 10px;
-    font-size: 14px;
-    color: #aaa;
+    display: flex; justify-content: space-between; align-items: center;
+    margin-bottom: 10px; font-size: 14px; color: #aaa;
   }
   .traffic-label span:last-child { color: #a855f7; font-weight: 700; }
-  .progress-bar {
-    width: 100%;
-    height: 12px;
-    background: #2a1f3d;
-    border-radius: 10px;
-    overflow: hidden;
-  }
+  .progress-bar { width: 100%; height: 12px; background: #2a1f3d; border-radius: 10px; overflow: hidden; }
   .progress-fill {
-    height: 100%;
-    width: 0%;
+    height: 100%; width: 0%;
     background: linear-gradient(90deg, #a855f7, #7c3aed);
-    border-radius: 10px;
-    transition: width 0.5s ease;
+    border-radius: 10px; transition: width 0.5s ease;
   }
 
-  /* === Кнопка пополнения === */
   .recharge-btn {
-    background: linear-gradient(135deg, #f59e0b, #d97706);
-    color: #fff;
-    border: none;
-    padding: 14px 30px;
-    border-radius: 15px;
-    font-size: 15px;
-    font-weight: 600;
-    cursor: pointer;
-    width: 100%;
-    box-shadow: 0 5px 0 #92400e;
-    transition: transform 0.1s, box-shadow 0.1s;
+    background: linear-gradient(135deg, #f59e0b, #d97706); color: #fff; border: none;
+    padding: 14px 30px; border-radius: 15px; font-size: 15px; font-weight: 600;
+    cursor: pointer; width: 100%; display: flex; align-items: center;
+    justify-content: center; gap: 8px;
+    box-shadow: 0 5px 0 #92400e; transition: transform 0.1s, box-shadow 0.1s;
   }
-  .recharge-btn:active {
-    transform: translateY(5px);
-    box-shadow: 0 0 0 #92400e;
-  }
+  .recharge-btn:active { transform: translateY(5px); box-shadow: 0 0 0 #92400e; }
+  .recharge-btn .ad-icon { width: 20px; height: 20px; fill: #fff; }
 
-  /* === Модалка рекламы === */
   #ad-modal {
-    position: fixed;
-    inset: 0;
-    background: rgba(0,0,0,0.85);
-    display: none;
-    align-items: center;
-    justify-content: center;
-    z-index: 200;
-    padding: 20px;
+    position: fixed; inset: 0; background: rgba(0,0,0,0.85);
+    display: none; align-items: center; justify-content: center;
+    z-index: 200; padding: 20px;
   }
   #ad-modal.active { display: flex; }
   .ad-content {
     background: linear-gradient(135deg, #7c3aed, #a855f7);
-    border-radius: 25px;
-    padding: 40px 25px;
-    text-align: center;
-    max-width: 340px;
-    width: 100%;
-    animation: pop 0.3s ease;
+    border-radius: 25px; padding: 40px 25px; text-align: center;
+    max-width: 340px; width: 100%; animation: pop 0.3s ease;
   }
-  @keyframes pop {
-    from { transform: scale(0.8); opacity: 0; }
-    to { transform: scale(1); opacity: 1; }
-  }
-  .ad-content h2 { font-size: 26px; margin-bottom: 15px; }
+  @keyframes pop { from { transform: scale(0.8); opacity: 0; } to { transform: scale(1); opacity: 1; } }
+  .ad-content h2 { font-size: 26px; margin-bottom: 15px; display: flex; align-items: center; justify-content: center; gap: 10px; }
   .ad-content p { font-size: 15px; opacity: 0.9; margin-bottom: 25px; }
-  .ad-timer {
-    font-size: 48px;
-    font-weight: 800;
-    margin-bottom: 20px;
-    color: #fbbf24;
-  }
+  .ad-timer { font-size: 48px; font-weight: 800; margin-bottom: 20px; color: #fbbf24; }
   .ad-close {
-    background: rgba(255,255,255,0.2);
-    border: none;
-    color: #fff;
-    padding: 12px 30px;
-    border-radius: 15px;
-    font-size: 15px;
-    cursor: not-allowed;
-    opacity: 0.5;
+    background: rgba(255,255,255,0.2); border: none; color: #fff;
+    padding: 12px 30px; border-radius: 15px; font-size: 15px;
+    cursor: not-allowed; opacity: 0.5; transition: all 0.2s;
   }
-  .ad-close.ready {
-    background: #fff;
-    color: #7c3aed;
-    cursor: pointer;
-    opacity: 1;
-    font-weight: 700;
-  }
+  .ad-close.ready { background: #fff; color: #7c3aed; cursor: pointer; opacity: 1; font-weight: 700; }
 
-  /* === Статус внизу === */
-  .status-line {
-    margin-top: 20px;
-    font-size: 12px;
-    color: #555;
+  .status-line { margin-top: 20px; font-size: 12px; color: #555; min-height: 16px; }
+
+  .reset-btn {
+    margin-top: 12px; background: transparent; border: 1px solid #333;
+    color: #666; padding: 8px 16px; border-radius: 10px;
+    font-size: 12px; cursor: pointer;
   }
 </style>
 </head>
 <body>
 
+<!-- SVG-иконки (определения) -->
+<svg style="display:none">
+  <symbol id="i-shield" viewBox="0 0 24 24">
+    <path d="M12 2L4 5v6c0 5 3.4 9.4 8 11 4.6-1.6 8-6 8-11V5l-8-3z"/>
+    <path d="M10 12l2 2 4-4" stroke="#0f0a1e" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+  </symbol>
+  <symbol id="i-power" viewBox="0 0 24 24">
+    <path d="M13 3h-2v10h2V3zm4.83 2.17l-1.42 1.42A6.92 6.92 0 0 1 19 12c0 3.87-3.13 7-7 7s-7-3.13-7-7c0-2.17 1.01-4.1 2.58-5.42L6.17 5.17A8.93 8.93 0 0 0 3 12c0 4.97 4.03 9 9 9s9-4.03 9-9c0-2.74-1.23-5.18-3.17-6.83z"/>
+  </symbol>
+  <symbol id="i-ad" viewBox="0 0 24 24">
+    <path d="M21 3H3c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h5v2h8v-2h5c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm0 14H3V5h18v12z"/>
+    <path d="M8 8v6h2v-2h2v2h2V8h-2v2h-2V8z"/>
+  </symbol>
+  <symbol id="i-check" viewBox="0 0 24 24">
+    <path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/>
+  </symbol>
+  <symbol id="i-refresh" viewBox="0 0 24 24">
+    <path d="M17.65 6.35A7.95 7.95 0 0 0 12 4c-4.42 0-7.99 3.58-8 8s3.58 8 8 8c3.73 0 6.84-2.55 7.73-6h-2.08A5.99 5.99 0 0 1 12 18c-3.31 0-6-2.69-6-6s2.69-6 6-6c1.66 0 3.14.69 4.22 1.78L13 11h7V4l-2.35 2.35z"/>
+  </symbol>
+  <symbol id="i-traffic" viewBox="0 0 24 24">
+    <path d="M16 6l2.29 2.29-4.88 4.88-4-4L2 16.59 3.41 18l6-6 4 4 6.3-6.29L22 12V6z"/>
+  </symbol>
+</svg>
+
 <!-- ЭКРАН РАЗРЕШЕНИЯ -->
 <div id="permission-screen">
-  <h1>🔒 Zuno VPN</h1>
+  <h1><svg class="icon" style="width:32px;height:32px;fill:#a855f7"><use href="#i-shield"/></svg> Zuno VPN</h1>
   <p>Для работы приложения разрешите<br>показ уведомлений и доступ к трафику</p>
   <button class="perm-btn" onclick="grantPermission()">Разрешить</button>
   <div class="status-line" id="permStatus"></div>
@@ -228,13 +150,14 @@
   <div class="logo">ZUNO VPN</div>
 
   <button class="vpn-btn" id="vpnBtn" onclick="toggleVPN()">
-    Подключить<br>VPN
+    <svg class="power-icon"><use href="#i-power"/></svg>
+    <span id="vpnBtnText">Подключить VPN</span>
   </button>
 
   <div class="traffic-box">
     <div class="traffic-label">
-      <span>Трафик</span>
-      <span id="trafficText">0 / 30 ГБ</span>
+      <span><svg class="icon" style="fill:#a855f7"><use href="#i-traffic"/></svg> Трафик</span>
+      <span id="trafficText">0 МБ / 30.0 ГБ</span>
     </div>
     <div class="progress-bar">
       <div class="progress-fill" id="progressFill"></div>
@@ -242,16 +165,20 @@
   </div>
 
   <button class="recharge-btn" onclick="showAd()">
-    📺 Посмотреть рекламу (+10 ГБ)
+    <svg class="ad-icon"><use href="#i-ad"/></svg>
+    Посмотреть рекламу (+10 ГБ)
   </button>
 
   <div class="status-line" id="mainStatus"></div>
+  <button class="reset-btn" onclick="resetProgress()">
+    <svg class="icon" style="width:12px;height:12px"><use href="#i-refresh"/></svg> Сбросить прогресс
+  </button>
 </div>
 
 <!-- МОДАЛКА РЕКЛАМЫ -->
 <div id="ad-modal">
   <div class="ad-content">
-    <h2>Zuno VPN</h2>
+    <h2><svg class="icon" style="width:28px;height:28px;fill:#fff"><use href="#i-shield"/></svg> Zuno VPN</h2>
     <p>Лучший VPN для твоего телефона!</p>
     <div class="ad-timer" id="adTimer">25</div>
     <button class="ad-close" id="adClose" onclick="closeAd()">Закрыть</button>
@@ -259,22 +186,62 @@
 </div>
 
 <script>
-  // === Состояние ===
-  const state = {
-    connected: false,
+  // === Сохранение в localStorage ===
+  const STORAGE_KEY = 'zuno_vpn_state';
+  const DEFAULT_STATE = {
     usedMB: 0,
-    totalMB: 30 * 1024,  // 30 ГБ
-    maxMB: 200 * 1024,   // 200 ГБ
-    interval: null,
-    notificationInterval: null
+    totalMB: 30 * 1024,   // 30 ГБ
+    maxMB: 200 * 1024,    // 200 ГБ
+    connected: false
   };
 
-  // 1 МБ каждые 200 мс (для демо, ~5 минут на 30 ГБ)
-  // Для реального времени: MB_PER_TICK = 102, TICK_MS = 60000
+  function loadState() {
+    try {
+      const raw = localStorage.getItem(STORAGE_KEY);
+      if (!raw) return { ...DEFAULT_STATE };
+      const parsed = JSON.parse(raw);
+      return { ...DEFAULT_STATE, ...parsed };
+    } catch (e) {
+      console.warn('Ошибка загрузки состояния:', e);
+      return { ...DEFAULT_STATE };
+    }
+  }
+
+  function saveState() {
+    try {
+      localStorage.setItem(STORAGE_KEY, JSON.stringify({
+        usedMB: state.usedMB,
+        totalMB: state.totalMB,
+        maxMB: state.maxMB,
+        connected: state.connected
+      }));
+    } catch (e) {
+      console.warn('Ошибка сохранения:', e);
+    }
+  }
+
+  function resetProgress() {
+    if (!confirm('Сбросить весь прогресс? Трафик вернётся к 30 ГБ.')) return;
+    localStorage.removeItem(STORAGE_KEY);
+    Object.assign(state, DEFAULT_STATE);
+    if (state.connected) {
+      state.connected = false;
+      document.getElementById('vpnBtn').classList.remove('connected');
+    }
+    stopTraffic();
+    updateVPNBtn();
+    updateTrafficUI();
+    log('Прогресс сброшен');
+  }
+
+  // === Состояние ===
+  let state = loadState();
+  let interval = null;
+  let notificationInterval = null;
+
   const MB_PER_TICK = 1;
   const TICK_MS = 200;
 
-  // === Логирование на экран ===
   function log(msg) {
     console.log(msg);
     const el = document.getElementById('mainStatus') || document.getElementById('permStatus');
@@ -284,61 +251,65 @@
   // === Разрешение ===
   async function grantPermission() {
     log('Запрос разрешения...');
-
-    // Проверяем поддержку Notification API
     if (!('Notification' in window)) {
-      log('❌ Браузер не поддерживает уведомления');
+      log('Браузер не поддерживает уведомления');
       enterApp();
       return;
     }
-
-    // Запрашиваем разрешение
     const perm = await Notification.requestPermission();
     log('Разрешение: ' + perm);
 
-    if (perm !== 'granted') {
-      log('⚠️ Уведомления отклонены. Работает без них.');
-    }
-
-    // Регистрируем Service Worker
     if ('serviceWorker' in navigator) {
       try {
-        const reg = await navigator.serviceWorker.register('./sw.js');
-        log('✅ SW зарегистрирован');
-        console.log('SW scope:', reg.scope);
+        await navigator.serviceWorker.register('./sw.js');
+        log('SW зарегистрирован');
       } catch (e) {
-        log('❌ Ошибка SW: ' + e.message);
-        console.error(e);
+        log('Ошибка SW: ' + e.message);
       }
-    } else {
-      log('❌ Service Worker не поддерживается');
     }
-
     enterApp();
   }
 
   function enterApp() {
     document.getElementById('permission-screen').style.display = 'none';
     document.getElementById('main-screen').style.display = 'block';
+
+    // Восстанавливаем состояние подключения
+    if (state.connected) {
+      document.getElementById('vpnBtn').classList.add('connected');
+      updateVPNBtn();
+      startTraffic();
+    } else {
+      updateVPNBtn();
+    }
     updateTrafficUI();
   }
 
-  // === Вкл/выкл VPN ===
-  function toggleVPN() {
-    state.connected = !state.connected;
+  // === VPN кнопка ===
+  function updateVPNBtn() {
     const btn = document.getElementById('vpnBtn');
-
+    const text = document.getElementById('vpnBtnText');
     if (state.connected) {
       btn.classList.add('connected');
-      btn.innerHTML = 'Отключить<br>VPN';
+      text.textContent = 'Отключить VPN';
+    } else {
+      btn.classList.remove('connected');
+      text.textContent = 'Подключить VPN';
+    }
+  }
+
+  function toggleVPN() {
+    state.connected = !state.connected;
+    saveState();
+    updateVPNBtn();
+
+    if (state.connected) {
       startTraffic();
       showNotification(
         'VPN подключение активно',
         'Трафик: ' + formatTraffic(state.usedMB) + ' / ' + formatTraffic(state.totalMB)
       );
     } else {
-      btn.classList.remove('connected');
-      btn.innerHTML = 'Подключить<br>VPN';
       stopTraffic();
       showNotification('VPN отключён', 'Соединение разорвано');
     }
@@ -347,24 +318,25 @@
   // === Счётчик трафика ===
   function startTraffic() {
     stopTraffic();
-    state.interval = setInterval(() => {
+    interval = setInterval(() => {
       state.usedMB += MB_PER_TICK;
 
       if (state.usedMB >= state.totalMB) {
         state.usedMB = state.totalMB;
         stopTraffic();
         state.connected = false;
-        const btn = document.getElementById('vpnBtn');
-        btn.classList.remove('connected');
-        btn.innerHTML = 'Подключить<br>VPN';
+        saveState();
+        updateVPNBtn();
         showNotification('Трафик исчерпан', 'Пополните баланс для продолжения');
       }
+
+      // Сохраняем каждые 20 тиков (≈4 сек), чтобы не грузить localStorage
+      if (Math.floor(state.usedMB) % 20 === 0) saveState();
 
       updateTrafficUI();
     }, TICK_MS);
 
-    // Обновляем уведомление каждые 10 секунд
-    state.notificationInterval = setInterval(() => {
+    notificationInterval = setInterval(() => {
       if (state.connected) {
         showNotification(
           'VPN подключение активно',
@@ -375,15 +347,15 @@
   }
 
   function stopTraffic() {
-    if (state.interval) clearInterval(state.interval);
-    if (state.notificationInterval) clearInterval(state.notificationInterval);
-    state.interval = null;
-    state.notificationInterval = null;
+    if (interval) clearInterval(interval);
+    if (notificationInterval) clearInterval(notificationInterval);
+    interval = null;
+    notificationInterval = null;
   }
 
   function updateTrafficUI() {
-    const text = formatTraffic(state.usedMB) + ' / ' + formatTraffic(state.totalMB);
-    document.getElementById('trafficText').textContent = text;
+    document.getElementById('trafficText').textContent =
+      formatTraffic(state.usedMB) + ' / ' + formatTraffic(state.totalMB);
     const percent = (state.usedMB / state.totalMB) * 100;
     document.getElementById('progressFill').style.width = percent + '%';
   }
@@ -395,21 +367,14 @@
 
   // === Уведомления ===
   async function showNotification(title, body) {
-    if (!('Notification' in window)) {
-      log('Нет Notification API');
-      return;
-    }
-    if (Notification.permission !== 'granted') {
-      log('Нет разрешения на уведомления');
-      return;
-    }
+    if (!('Notification' in window)) return;
+    if (Notification.permission !== 'granted') return;
 
     const iconUrl = 'data:image/svg+xml,' + encodeURIComponent(
       '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><circle cx="50" cy="50" r="45" fill="#a855f7"/><text x="50" y="68" font-size="55" text-anchor="middle" fill="white" font-family="sans-serif" font-weight="bold">Z</text></svg>'
     );
 
     try {
-      // Через Service Worker (работает на телефоне)
       if ('serviceWorker' in navigator) {
         const reg = await navigator.serviceWorker.ready;
         await reg.showNotification(title, {
@@ -417,42 +382,48 @@
           icon: iconUrl,
           badge: iconUrl,
           tag: 'vpn-status',
-          renotify: true,
-          requireInteraction: false
+          renotify: true
         });
-        log('📨 Уведомление отправлено');
       } else {
-        // Fallback для ПК
         new Notification(title, { body: body, icon: iconUrl });
-        log('📨 Уведомление (fallback)');
       }
+      log('Уведомление отправлено');
     } catch (e) {
-      log('❌ Ошибка уведомления: ' + e.message);
-      console.error(e);
+      log('Ошибка уведомления: ' + e.message);
     }
   }
 
-  // === Реклама ===
+  // === Реклама (ИСПРАВЛЕНО) ===
   let adInterval = null;
+  let adReady = false;
+
   function showAd() {
     if (state.totalMB >= state.maxMB) {
       alert('Достигнут максимум 200 ГБ!');
       return;
     }
+
     const modal = document.getElementById('ad-modal');
-    modal.classList.add('active');
-    let timeLeft = 25;
     const timerEl = document.getElementById('adTimer');
     const closeBtn = document.getElementById('adClose');
+
+    modal.classList.add('active');
+    adReady = false;
+    let timeLeft = 25;
     timerEl.textContent = timeLeft;
     closeBtn.classList.remove('ready');
-    closeBtn.textContent = 'Закрыть';
+    closeBtn.textContent = 'Закрыть (25)';
 
+    if (adInterval) clearInterval(adInterval);
     adInterval = setInterval(() => {
       timeLeft--;
       timerEl.textContent = timeLeft;
+      closeBtn.textContent = 'Закрыть (' + timeLeft + ')';
+
       if (timeLeft <= 0) {
         clearInterval(adInterval);
+        adInterval = null;
+        adReady = true;
         closeBtn.classList.add('ready');
         closeBtn.textContent = 'Получить +10 ГБ';
       }
@@ -460,27 +431,39 @@
   }
 
   function closeAd() {
-    const closeBtn = document.getElementById('adClose');
-    if (!closeBtn.classList.contains('ready')) return;
+    if (!adReady) return;  // рано закрывать нельзя
 
-    clearInterval(adInterval);
+    if (adInterval) { clearInterval(adInterval); adInterval = null; }
     document.getElementById('ad-modal').classList.remove('active');
 
     const addMB = 10 * 1024;
+    const before = state.totalMB;
     state.totalMB = Math.min(state.totalMB + addMB, state.maxMB);
+    const added = state.totalMB - before;
+
+    saveState();
     updateTrafficUI();
 
-    showNotification('Трафик пополнен', '+10 ГБ. Всего: ' + formatTraffic(state.totalMB));
+    showNotification(
+      'Трафик пополнен',
+      '+' + formatTraffic(added) + '. Всего: ' + formatTraffic(state.totalMB)
+    );
+    log('Пополнено: +' + formatTraffic(added));
   }
 
-  // === Инициализация ===
-  window.addEventListener('load', () => {
-    if ('serviceWorker' in navigator) {
-      navigator.serviceWorker.register('./sw.js').then(
-        () => console.log('SW зарегистрирован при загрузке'),
-        (e) => console.warn('SW ошибка:', e)
-      );
-    }
+  // === Слушатель сообщений от SW (для кнопок в уведомлении) ===
+  if ('serviceWorker' in navigator) {
+    navigator.serviceWorker.addEventListener('message', (event) => {
+      if (event.data && event.data.action === 'disconnect' && state.connected) {
+        toggleVPN();
+      }
+    });
+  }
+
+  // === Автосохранение при уходе со страницы ===
+  window.addEventListener('beforeunload', saveState);
+  document.addEventListener('visibilitychange', () => {
+    if (document.hidden) saveState();
   });
 </script>
 </body>
