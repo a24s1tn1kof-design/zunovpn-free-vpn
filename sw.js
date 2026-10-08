@@ -1,6 +1,9 @@
 self.addEventListener('install', () => self.skipWaiting());
 self.addEventListener('activate', (e) => e.waitUntil(self.clients.claim()));
 
+// ЭТА СТРОКА ОБЯЗАТЕЛЬНА для установки как PWA на Android Chrome
+self.addEventListener('fetch', () => {});
+
 self.addEventListener('notificationclick', (event) => {
   event.notification.close();
   const action = event.action || 'open';
