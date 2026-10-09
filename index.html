@@ -11,7 +11,7 @@
   body {
     background:#0f0a1e; color:#fff; min-height:100vh;
     display:flex; flex-direction:column; align-items:center; justify-content:center;
-    padding:20px; overflow-x:hidden; user-select:none; position:relative;
+    padding:60px 20px 70px; overflow-x:hidden; user-select:none; position:relative;
   }
   .icon { display:inline-block; vertical-align:middle; width:1em; height:1em; fill:currentColor; }
 
@@ -22,6 +22,14 @@
     10% { opacity:0.6; }
     90% { opacity:0.6; }
     100% { transform:translateY(-100vh) scale(1.2); opacity:0; }
+  }
+
+  /* === Логотип сверху экрана === */
+  .logo {
+    position:fixed; top:18px; left:0; right:0;
+    text-align:center; z-index:10;
+    font-size:26px; font-weight:800; color:#a855f7;
+    letter-spacing:3px; pointer-events:none;
   }
 
   #permission-screen, #main-screen { position:relative; z-index:1; }
@@ -40,7 +48,6 @@
   .perm-btn:active { transform:scale(0.97); }
 
   #main-screen { display:none; width:100%; max-width:400px; text-align:center; }
-  .logo { font-size:28px; font-weight:800; color:#a855f7; margin-top:-30px; margin-bottom:25px; letter-spacing:2px; }
 
   .vpn-wrap { position:relative; margin:0 auto 35px; width:180px; height:180px; }
   .vpn-btn {
@@ -113,7 +120,19 @@
   .server-pill .ping { font-size:12px; font-family:monospace; font-weight:700; }
   .server-pill .arrow { color:#666; }
 
-  .status-line { margin-top:12px; font-size:11px; color:#555; min-height:14px; }
+  /* === НИЖНИЕ ССЫЛКИ === */
+  .footer-links {
+    position:fixed; bottom:12px; left:0; right:0;
+    display:flex; justify-content:center; gap:22px;
+    font-size:12px; color:#555; z-index:10;
+    user-select:none;
+  }
+  .footer-links a {
+    color:#555; text-decoration:none; cursor:pointer;
+    transition:color 0.15s;
+  }
+  .footer-links a:hover, .footer-links a:active { color:#a855f7; }
+  .footer-links .sep { color:#2a1f3d; }
 
   .modal {
     position:fixed; inset:0; background:rgba(0,0,0,0.88);
@@ -133,6 +152,16 @@
     border-radius:12px; font-size:14px; cursor:pointer; margin-top:15px;
   }
   .modal-close:active { background:#3a2a50; }
+
+  .info-text {
+    text-align:left; font-size:13.5px; line-height:1.6; color:#bbb;
+  }
+  .info-text h3 { color:#a855f7; font-size:14px; margin:16px 0 6px; }
+  .info-text h3:first-child { margin-top:0; }
+  .info-text p { margin-bottom:6px; }
+  .info-text ul { padding-left:18px; margin:4px 0 10px; }
+  .info-text li { margin-bottom:4px; }
+  .info-text .accent { color:#a855f7; font-weight:600; }
 
   .ad-content {
     background:linear-gradient(135deg, #7c3aed, #a855f7);
@@ -216,16 +245,15 @@
   <symbol id="i-globe" viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 17.93c-3.94-.49-7-3.85-7-7.93 0-.62.08-1.21.21-1.79L9 15v1c0 1.1.9 2 2 2v1.93zm6.9-2.54c-.26-.81-1-1.39-1.9-1.39h-1v-3c0-.55-.45-1-1-1H8v-2h2c.55 0 1-.45 1-1V7h2c1.1 0 2-.9 2-2v-.41c2.93 1.19 5 4.06 5 7.41 0 2.08-.8 3.97-2.1 5.39z"/></symbol>
 </svg>
 
+<div class="logo">ZUNO VPN</div>
+
 <div id="permission-screen">
   <h1><svg class="icon" style="width:32px;height:32px;fill:#a855f7"><use href="#i-shield"/></svg> Zuno VPN</h1>
   <p>Для работы разрешите<br>показ уведомлений</p>
   <button class="perm-btn" onclick="grantPermission()">Разрешить</button>
-  <div class="status-line" id="permStatus"></div>
 </div>
 
 <div id="main-screen">
-  <div class="logo">ZUNO VPN</div>
-
   <div class="vpn-wrap">
     <div class="radar" id="radar"></div>
     <button class="vpn-btn" id="vpnBtn" onclick="toggleVPN()">
@@ -264,8 +292,14 @@
     <svg class="ad-icon"><use href="#i-ad"/></svg>
     Посмотреть рекламу (+10 ГБ)
   </button>
+</div>
 
-  <div class="status-line" id="mainStatus"></div>
+<div class="footer-links">
+  <a onclick="openHelp()">Помощь</a>
+  <span class="sep">•</span>
+  <a onclick="openRules()">Правила</a>
+  <span class="sep">•</span>
+  <a onclick="openAuthor()">by Arseniy</a>
 </div>
 
 <div class="modal" id="ad-modal">
@@ -311,8 +345,64 @@
   </div>
 </div>
 
+<div class="modal" id="help-modal">
+  <div class="modal-box">
+    <h2><svg class="icon" style="width:22px;height:22px;fill:#a855f7"><use href="#i-shield"/></svg> Помощь</h2>
+    <div class="info-text">
+      <h3>Как подключиться</h3>
+      <p>Нажми большую фиолетовую кнопку — она станет зелёной, VPN активируется.</p>
+      <h3>Трафик</h3>
+      <p>Изначально доступно <span class="accent">30 ГБ</span>. Тратится пока VPN включён.</p>
+      <h3>Как пополнить</h3>
+      <ul>
+        <li>Нажми <span class="accent">«Посмотреть рекламу»</span> → +10 ГБ</li>
+        <li>Крути <span class="accent">Колесо удачи</span> → до +5 ГБ раз в день</li>
+      </ul>
+      <h3>Смена сервера</h3>
+      <p>Нажми на строку с флагом — выбери другую страну. Чем меньше пинг, тем быстрее соединение.</p>
+      <h3>Уведомления</h3>
+      <p>Когда VPN активен — в шторке телефона появится уведомление с трафиком и кнопкой «Отключить».</p>
+    </div>
+    <button class="modal-close" onclick="closeModal('help-modal')">Понятно</button>
+  </div>
+</div>
+
+<div class="modal" id="rules-modal">
+  <div class="modal-box">
+    <h2><svg class="icon" style="width:22px;height:22px;fill:#a855f7"><use href="#i-shield"/></svg> Правила</h2>
+    <div class="info-text">
+      <h3>1. Назначение</h3>
+      <p>Zuno VPN — демонстрационное приложение. Оно не обеспечивает реального шифрования трафика.</p>
+      <h3>2. Использование</h3>
+      <p>Приложение предоставляется «как есть». Пользователь использует его на свой риск.</p>
+      <h3>3. Данные</h3>
+      <p>Все данные (трафик, прогресс, история) хранятся <span class="accent">локально на вашем устройстве</span> и не передаются на сервер.</p>
+      <h3>4. Реклама</h3>
+      <p>Нажатие «Посмотреть рекламу» открывает демонстрационный экран. Настоящая реклама не показывается.</p>
+      <h3>5. Изменения</h3>
+      <p>Правила могут быть изменены без предварительного уведомления.</p>
+    </div>
+    <button class="modal-close" onclick="closeModal('rules-modal')">Принять</button>
+  </div>
+</div>
+
+<div class="modal" id="author-modal">
+  <div class="modal-box">
+    <h2><svg class="icon" style="width:22px;height:22px;fill:#a855f7"><use href="#i-shield"/></svg> by Arseniy</h2>
+    <div class="info-text" style="text-align:center;">
+      <p style="font-size:15px;margin-bottom:12px;">Приложение создано <span class="accent">Arseniy</span></p>
+      <p style="color:#888;font-size:13px;line-height:1.7;">
+        Zuno VPN<br>
+        Веб-приложение · 2026<br><br>
+        Спасибо, что пользуешься!
+      </p>
+    </div>
+    <button class="modal-close" onclick="closeModal('author-modal')">Закрыть</button>
+  </div>
+</div>
+
 <script>
-   const STORAGE_KEY = 'zuno_vpn_v3';
+  const STORAGE_KEY = 'zuno_vpn_v3';
   const SERVERS = [
     { code:'NL', flag:'🇳🇱', name:'Нидерланды', basePing:12 },
     { code:'DE', flag:'🇩🇪', name:'Германия',   basePing:24 },
@@ -344,11 +434,6 @@
   let currentPing = 0;
   const MB_PER_TICK = 1;
   const TICK_MS = 200;
-
-  function log(msg) {
-    const el = document.getElementById('mainStatus') || document.getElementById('permStatus');
-    if (el) el.textContent = msg;
-  }
 
   function updateStreak() {
     const today = new Date().toISOString().slice(0,10);
@@ -386,13 +471,10 @@
   }
 
   async function grantPermission() {
-    log('Запрос разрешения...');
-    if (!('Notification' in window)) { log('Уведомления не поддерживаются'); enterApp(); return; }
-    const perm = await Notification.requestPermission();
-    log('Разрешение: ' + perm);
+    if (!('Notification' in window)) { enterApp(); return; }
+    await Notification.requestPermission();
     if ('serviceWorker' in navigator) {
-      try { await navigator.serviceWorker.register('./sw.js'); log('SW зарегистрирован'); }
-      catch(e) { log('Ошибка SW: ' + e.message); }
+      try { await navigator.serviceWorker.register('./sw.js'); } catch(e){}
     }
     enterApp();
   }
@@ -415,7 +497,6 @@
       updateVPNBtn();
     }
     updateTrafficUI();
-    log('');
   }
 
   function updateVPNBtn() {
@@ -492,11 +573,7 @@
     const base = getServer().basePing;
     const diff = Math.abs(currentPing - base);
     el.textContent = currentPing + ' ms';
-    if (!state.connected || diff <= 2) {
-      el.style.color = '#22c55e';
-    } else {
-      el.style.color = '#ef4444';
-    }
+    el.style.color = (!state.connected || diff <= 2) ? '#22c55e' : '#ef4444';
   }
 
   function startTraffic() {
@@ -581,8 +658,7 @@
       } else {
         new Notification(title, options);
       }
-      log('Уведомление отправлено');
-    } catch(e) { log('Ошибка уведомления: ' + e.message); }
+    } catch(e) {}
   }
 
   let adInterval = null, adReady = false;
@@ -613,16 +689,13 @@
     if (!adReady) return;
     if (adInterval) { clearInterval(adInterval); adInterval = null; }
     document.getElementById('ad-modal').classList.remove('active');
-
     const wantAdd = 10 * 1024;
     const before = state.totalMB;
     state.totalMB = Math.min(state.totalMB + wantAdd, state.maxMB);
     const added = state.totalMB - before;
-
     state.adsWatched = (state.adsWatched||0) + 1;
     saveState(); updateTrafficUI();
     showNotification('Трафик пополнен', '+' + formatTraffic(added) + '. Всего: ' + formatTraffic(state.totalMB));
-    log('Пополнено: +' + formatTraffic(added));
   }
 
   const WHEEL_PRIZES = [
@@ -646,7 +719,6 @@
     const n = WHEEL_PRIZES.length;
     const seg = (2*Math.PI) / n;
     ctx.clearRect(0, 0, W, H);
-
     for (let i = 0; i < n; i++) {
       const start = i*seg - Math.PI/2 - seg/2;
       const end = start + seg;
@@ -659,7 +731,6 @@
       ctx.strokeStyle = 'rgba(0,0,0,0.25)';
       ctx.lineWidth = 2;
       ctx.stroke();
-
       ctx.save();
       ctx.translate(cx, cy);
       ctx.rotate(start + seg/2);
@@ -672,7 +743,6 @@
       ctx.fillText(WHEEL_PRIZES[i].label, r - 24, 0);
       ctx.restore();
     }
-
     ctx.beginPath();
     ctx.arc(cx, cy, 34, 0, 2*Math.PI);
     ctx.fillStyle = '#1a1228';
@@ -706,16 +776,12 @@
     const btn = document.getElementById('spinBtn');
     btn.disabled = true;
     btn.textContent = 'Крутится...';
-
     const n = WHEEL_PRIZES.length;
     const segAngle = 360 / n;
     const winIndex = Math.floor(Math.random() * n);
     const targetAngle = 360 * 5 + (360 - winIndex * segAngle - segAngle/2);
     wheelRotation += targetAngle;
-
-    const canvas = document.getElementById('wheelCanvas');
-    canvas.style.transform = 'rotate(' + wheelRotation + 'deg)';
-
+    document.getElementById('wheelCanvas').style.transform = 'rotate(' + wheelRotation + 'deg)';
     setTimeout(() => {
       const prize = WHEEL_PRIZES[winIndex];
       const resEl = document.getElementById('spinResult');
@@ -806,6 +872,10 @@
 
   function closeModal(id) { document.getElementById(id).classList.remove('active'); }
 
+  function openHelp() { document.getElementById('help-modal').classList.add('active'); }
+  function openRules() { document.getElementById('rules-modal').classList.add('active'); }
+  function openAuthor() { document.getElementById('author-modal').classList.add('active'); }
+
   if ('serviceWorker' in navigator) {
     navigator.serviceWorker.addEventListener('message', (event) => {
       if (!event.data) return;
@@ -818,7 +888,6 @@
 
   initParticles();
 
-  // Автопроверка разрешения при загрузке — не спрашиваем повторно
   function autoCheckPermission() {
     if (!('Notification' in window)) { enterApp(); return; }
     if (Notification.permission === 'granted') {
@@ -827,13 +896,11 @@
       }
       enterApp();
     } else if (Notification.permission === 'denied') {
-      const el = document.getElementById('permStatus');
-      if (el) el.textContent = 'Уведомления отключены в браузере';
-      setTimeout(enterApp, 800);
+      enterApp();
     }
     // если 'default' — оставляем экран разрешения
   }
   autoCheckPermission();
 </script>
 </body>
-</html>
+</html> 
