@@ -8,15 +8,13 @@
 <title>Zuno VPN</title>
 <style>
   * { margin:0; padding:0; box-sizing:border-box; font-family:-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; -webkit-tap-highlight-color:transparent; }
-  body { background:#0f0a1e; color:#fff; min-height:100vh; display:flex; flex-direction:column; align-items:center; justify-content:center; padding:70px 20px 130px; overflow-x:hidden; user-select:none; position:relative; }
+  body { background:#0f0a1e; color:#fff; min-height:100vh; display:flex; flex-direction:column; align-items:center; justify-content:center; padding:60px 20px 120px; overflow-x:hidden; user-select:none; position:relative; }
   .icon { display:inline-block; vertical-align:middle; width:1em; height:1em; fill:currentColor; }
   #particles { position:fixed; inset:0; z-index:0; pointer-events:none; }
-  .particle { position:absolute; border-radius:50%; background:#a855f7; opacity:0; animation:float linear infinite; }
+  .particle { position:absolute; border-radius:50%; background:#a855f7; opacity:0; animation:float linear infinite; pointer-events:none; }
   @keyframes float { 0%{transform:translateY(0) scale(0);opacity:0;} 10%{opacity:0.6;} 90%{opacity:0.6;} 100%{transform:translateY(-100vh) scale(1.2);opacity:0;} }
-  .top-bar { position:fixed; top:0; left:0; right:0; z-index:10; display:flex; align-items:center; justify-content:space-between; padding:14px 18px; background:linear-gradient(180deg, #0f0a1e 70%, transparent); pointer-events:none; }
+  .top-bar { position:fixed; top:0; left:0; right:0; z-index:10; display:flex; align-items:center; justify-content:space-between; padding:14px 18px; pointer-events:none; }
   .logo { font-size:22px; font-weight:800; color:#a855f7; letter-spacing:3px; pointer-events:auto; }
-  .avatar-top { width:36px; height:36px; border-radius:50%; background:linear-gradient(135deg, #a855f7, #7c3aed); display:flex; align-items:center; justify-content:center; font-size:16px; font-weight:800; color:#fff; cursor:pointer; pointer-events:auto; box-shadow:0 4px 12px rgba(168,85,247,0.4); transition:transform 0.15s; }
-  .avatar-top:active { transform:scale(0.92); }
   #permission-screen, #main-screen { position:relative; z-index:1; }
   #permission-screen { position:fixed; inset:0; background:#0f0a1e; display:flex; flex-direction:column; align-items:center; justify-content:center; z-index:100; padding:30px; text-align:center; }
   #permission-screen h1 { color:#a855f7; margin-bottom:20px; font-size:28px; display:flex; align-items:center; gap:10px; justify-content:center; }
@@ -41,10 +39,10 @@
   .progress-bar { width:100%; height:10px; background:#2a1f3d; border-radius:10px; overflow:hidden; }
   .progress-fill { height:100%; width:0%; background:linear-gradient(90deg, #a855f7, #7c3aed); border-radius:10px; transition:width 0.5s ease; }
   .tiles { display:grid; grid-template-columns:1fr 1fr; gap:10px; margin-bottom:12px; }
-  .tile { background:#1a1228; border:1px solid #2a1f3d; border-radius:15px; padding:14px; color:#fff; font-size:13px; font-weight:600; cursor:pointer; display:flex; align-items:center; justify-content:center; gap:8px; transition:all 0.15s; }
+  .tile { background:#1a1228; border:1px solid #2a1f3d; border-radius:15px; padding:14px; color:#fff; font-size:13px; font-weight:600; cursor:pointer; display:flex; align-items:center; justify-content:center; gap:8px; transition:all 0.15s; font-family:inherit; }
   .tile:active { transform:scale(0.97); background:#241833; }
   .tile svg { width:16px; height:16px; fill:#a855f7; }
-  .recharge-btn { background:linear-gradient(135deg, #f59e0b, #d97706); color:#fff; border:none; padding:14px 30px; border-radius:15px; font-size:15px; font-weight:600; cursor:pointer; width:100%; display:flex; align-items:center; justify-content:center; gap:8px; box-shadow:0 5px 0 #92400e; transition:transform 0.1s, box-shadow 0.1s; }
+  .recharge-btn { background:linear-gradient(135deg, #f59e0b, #d97706); color:#fff; border:none; padding:14px 30px; border-radius:15px; font-size:15px; font-weight:600; cursor:pointer; width:100%; display:flex; align-items:center; justify-content:center; gap:8px; box-shadow:0 5px 0 #92400e; transition:transform 0.1s, box-shadow 0.1s; font-family:inherit; }
   .recharge-btn:active { transform:translateY(5px); box-shadow:0 0 0 #92400e; }
   .recharge-btn .ad-icon { width:20px; height:20px; fill:#fff; }
   .server-pill { background:#1a1228; border-radius:15px; padding:12px 16px; margin-bottom:12px; display:flex; align-items:center; justify-content:space-between; cursor:pointer; font-size:14px; }
@@ -55,7 +53,7 @@
   .nav-btn { flex:1; background:none; border:none; color:#666; font-size:11px; font-weight:600; cursor:pointer; display:flex; flex-direction:column; align-items:center; gap:4px; padding:6px 4px; transition:color 0.15s; font-family:inherit; }
   .nav-btn:active { color:#a855f7; }
   .nav-btn svg { width:22px; height:22px; fill:currentColor; }
-  .footer-links { position:fixed; bottom:78px; left:0; right:0; display:flex; justify-content:center; gap:16px; font-size:11px; color:#444; z-index:49; padding:6px 0; background:linear-gradient(0deg, #0f0a1e 60%, transparent); user-select:none; }
+  .footer-links { position:fixed; bottom:78px; left:0; right:0; display:flex; justify-content:center; gap:16px; font-size:11px; z-index:49; padding:6px 0; user-select:none; }
   .footer-links a { color:#555; text-decoration:none; cursor:pointer; }
   .footer-links a:active { color:#a855f7; }
   .footer-links .sep { color:#2a1f3d; }
@@ -64,7 +62,7 @@
   .modal-box { background:#1a1228; border-radius:25px; padding:25px; text-align:center; max-width:360px; width:100%; animation:pop 0.3s ease; max-height:88vh; overflow-y:auto; }
   @keyframes pop { from{transform:scale(0.85);opacity:0;} to{transform:scale(1);opacity:1;} }
   .modal-box h2 { font-size:20px; margin-bottom:15px; display:flex; align-items:center; justify-content:center; gap:10px; color:#a855f7; }
-  .modal-close { background:#2a1f3d; border:none; color:#aaa; padding:10px 25px; border-radius:12px; font-size:14px; cursor:pointer; margin-top:15px; }
+  .modal-close { background:#2a1f3d; border:none; color:#aaa; padding:10px 25px; border-radius:12px; font-size:14px; cursor:pointer; margin-top:15px; font-family:inherit; }
   .modal-close:active { background:#3a2a50; }
   .info-text { text-align:left; font-size:13.5px; line-height:1.6; color:#bbb; }
   .info-text h3 { color:#a855f7; font-size:14px; margin:16px 0 6px; }
@@ -88,21 +86,21 @@
   .profile-logout { background:rgba(239,68,68,0.15); color:#ef4444; border:1px solid rgba(239,68,68,0.3); padding:11px 24px; border-radius:12px; font-size:13px; font-weight:600; cursor:pointer; width:100%; margin-top:10px; font-family:inherit; }
   .profile-logout:active { background:rgba(239,68,68,0.25); }
   .premium-header { background:linear-gradient(135deg, #f59e0b, #d97706); color:#fff; padding:18px; border-radius:20px; margin-bottom:16px; text-align:center; }
-  .premium-header .crown { font-size:38px; margin-bottom:6px; }
-  .premium-header h3 { font-size:20px; margin-bottom:4px; }
+  .premium-header h3 { font-size:20px; margin:6px 0 4px; }
   .premium-header p { font-size:12px; opacity:0.9; }
+  .premium-icon { width:44px; height:44px; fill:#fff; margin-bottom:6px; }
   .premium-features { text-align:left; margin-bottom:16px; }
   .premium-feature { display:flex; align-items:center; gap:10px; padding:9px 0; font-size:13.5px; color:#ccc; border-bottom:1px solid #2a1f3d; }
   .premium-feature:last-child { border-bottom:none; }
-  .premium-feature .dot { width:20px; height:20px; border-radius:50%; background:rgba(34,197,94,0.2); color:#22c55e; display:flex; align-items:center; justify-content:center; font-size:12px; font-weight:800; flex-shrink:0; }
+  .premium-feature .dot { width:20px; height:20px; border-radius:50%; background:rgba(34,197,94,0.2); display:flex; align-items:center; justify-content:center; flex-shrink:0; }
   .plan-btn { background:linear-gradient(135deg, #f59e0b, #d97706); color:#fff; border:none; padding:14px; border-radius:14px; font-size:14px; font-weight:700; cursor:pointer; width:100%; margin-bottom:8px; display:flex; justify-content:space-between; align-items:center; padding-left:20px; padding-right:20px; box-shadow:0 5px 0 #92400e; font-family:inherit; }
   .plan-btn:active { transform:translateY(5px); box-shadow:0 0 0 #92400e; }
   .plan-btn .plan-price { font-size:15px; }
   .plan-btn .plan-tag { background:rgba(255,255,255,0.25); padding:3px 9px; border-radius:9px; font-size:10px; font-weight:800; }
   .promo-input-wrap { display:flex; gap:8px; margin-bottom:14px; }
-  .promo-input { flex:1; background:#0f0a1e; border:1px solid #2a1f3d; border-radius:14px; padding:14px 16px; font-size:15px; color:#fff; font-family:inherit; outline:none; text-transform:uppercase; }
+  .promo-input { flex:1; background:#0f0a1e; border:1px solid #2a1f3d; border-radius:14px; padding:14px 16px; font-size:15px; color:#fff; font-family:inherit; outline:none; text-transform:uppercase; min-width:0; }
   .promo-input:focus { border-color:#a855f7; }
-  .promo-apply { background:linear-gradient(135deg, #a855f7, #7c3aed); color:#fff; border:none; padding:0 22px; border-radius:14px; font-size:14px; font-weight:700; cursor:pointer; font-family:inherit; }
+  .promo-apply { background:linear-gradient(135deg, #a855f7, #7c3aed); color:#fff; border:none; padding:0 16px; border-radius:14px; font-size:14px; font-weight:700; cursor:pointer; font-family:inherit; min-width:60px; flex-shrink:0; }
   .promo-apply:active { transform:scale(0.96); }
   .promo-result { padding:12px; border-radius:14px; font-size:13px; font-weight:600; min-height:20px; }
   .promo-result.ok { background:rgba(34,197,94,0.15); color:#22c55e; }
@@ -113,7 +111,7 @@
   .ad-content h2 { font-size:24px; margin-bottom:15px; display:flex; align-items:center; justify-content:center; gap:10px; }
   .ad-content p { font-size:14px; opacity:0.9; margin-bottom:20px; }
   .ad-timer { font-size:44px; font-weight:800; margin-bottom:15px; color:#fbbf24; }
-  .ad-close { background:rgba(255,255,255,0.2); border:none; color:#fff; padding:12px 30px; border-radius:15px; font-size:14px; cursor:not-allowed; opacity:0.5; transition:all 0.2s; }
+  .ad-close { background:rgba(255,255,255,0.2); border:none; color:#fff; padding:12px 30px; border-radius:15px; font-size:14px; cursor:not-allowed; opacity:0.5; transition:all 0.2s; font-family:inherit; }
   .ad-close.ready { background:#fff; color:#7c3aed; cursor:pointer; opacity:1; font-weight:700; }
   .wheel-container { position:relative; width:260px; height:260px; margin:0 auto 20px; }
   #wheelCanvas { width:260px; height:260px; border-radius:50%; box-shadow:0 0 30px rgba(168,85,247,0.5); transition:transform 4s cubic-bezier(0.17, 0.67, 0.12, 1); }
@@ -138,12 +136,40 @@
   .server-item.selected .check { display:inline; }
   .server-item .lock { color:#f59e0b; margin-left:8px; font-size:14px; }
   .server-item.locked { opacity:0.6; }
+  .card-form { text-align:left; margin-bottom:14px; }
+  .card-input { width:100%; background:#0f0a1e; border:1px solid #2a1f3d; border-radius:12px; padding:12px 14px; font-size:14px; color:#fff; font-family:monospace; outline:none; margin-bottom:8px; letter-spacing:1px; }
+  .card-input:focus { border-color:#a855f7; }
+  .card-row { display:flex; gap:8px; }
+  .card-row .card-input { margin-bottom:0; }
+  .card-label { font-size:11px; color:#666; margin-bottom:4px; text-transform:uppercase; letter-spacing:0.5px; }
+  .pay-success { background:rgba(34,197,94,0.15); color:#22c55e; border-radius:12px; padding:12px; font-size:13px; font-weight:600; margin-top:12px; }
+  .toast-modal-box { background:#1a1228; border-radius:22px; padding:24px; text-align:center; max-width:300px; width:100%; animation:pop 0.3s ease; }
+  .toast-modal-box .toast-icon { width:64px; height:64px; margin:0 auto 14px; border-radius:50%; display:flex; align-items:center; justify-content:center; }
+  .toast-modal-box .toast-icon.green { background:rgba(34,197,94,0.15); }
+  .toast-modal-box .toast-icon.purple { background:rgba(168,85,247,0.15); }
+  .toast-modal-box .toast-icon.gold { background:rgba(245,158,11,0.15); }
+  .toast-modal-box .toast-icon.red { background:rgba(239,68,68,0.15); }
+  .toast-modal-box .toast-icon svg { width:32px; height:32px; }
+  .toast-modal-box h2 { font-size:18px; margin-bottom:8px; color:#fff; }
+  .toast-modal-box p { font-size:13px; color:#999; line-height:1.5; margin-bottom:18px; }
+  .toast-modal-box .toast-btn { background:linear-gradient(135deg, #a855f7, #7c3aed); color:#fff; border:none; padding:12px 28px; border-radius:13px; font-size:14px; font-weight:700; cursor:pointer; width:100%; font-family:inherit; }
+  .toast-modal-box .toast-btn:active { transform:scale(0.98); }
+  .update-modal-box { background:#1a1228; border-radius:25px; padding:28px 24px; text-align:center; max-width:340px; width:100%; animation:pop 0.3s ease; }
+  .update-modal-box h2 { font-size:20px; color:#a855f7; margin-bottom:10px; }
+  .update-modal-box p { font-size:13px; color:#aaa; margin-bottom:20px; line-height:1.5; }
+  .update-size { color:#a855f7; font-weight:800; }
+  .update-progress-wrap { width:100%; height:8px; background:#2a1f3d; border-radius:10px; overflow:hidden; margin-bottom:12px; display:none; }
+  .update-progress-fill { height:100%; width:0%; background:linear-gradient(90deg, #a855f7, #7c3aed); border-radius:10px; transition:width 0.3s linear; }
+  .update-progress-text { font-size:12px; color:#888; display:none; }
+  .update-btn { background:linear-gradient(135deg, #a855f7, #7c3aed); color:#fff; border:none; padding:14px 30px; border-radius:14px; font-size:15px; font-weight:700; cursor:pointer; width:100%; box-shadow:0 5px 0 #5b21b6; font-family:inherit; transition:transform 0.1s, box-shadow 0.1s; }
+  .update-btn:active { transform:translateY(4px); box-shadow:0 1px 0 #5b21b6; }
+  .update-btn:disabled { opacity:0.5; cursor:not-allowed; }
 </style>
 </head>
 <body>
 <div id="particles"></div>
 <svg style="display:none">
-  <symbol id="i-shield" viewBox="0 0 24 24"><path d="M12 2L4 5v6c0 5 3.4 9.4 8 11 4.6-1.6 8-6 8-11V5l-8-3z"/></symbol>
+   <symbol id="i-shield" viewBox="0 0 24 24"><path d="M12 2L4 5v6c0 5 3.4 9.4 8 11 4.6-1.6 8-6 8-11V5l-8-3z"/></symbol>
   <symbol id="i-power" viewBox="0 0 24 24"><path d="M13 3h-2v10h2V3zm4.83 2.17l-1.42 1.42A6.92 6.92 0 0 1 19 12c0 3.87-3.13 7-7 7s-7-3.13-7-7c0-2.17 1.01-4.1 2.58-5.42L6.17 5.17A8.93 8.93 0 0 0 3 12c0 4.97 4.03 9 9 9s9-4.03 9-9c0-2.74-1.23-5.18-3.17-6.83z"/></symbol>
   <symbol id="i-ad" viewBox="0 0 24 24"><path d="M21 3H3c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h5v2h8v-2h5c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm0 14H3V5h18v12z"/></symbol>
   <symbol id="i-chart" viewBox="0 0 24 24"><path d="M5 9.2h3V19H5zM10.6 5h2.8v14h-2.8zm5.6 8H19v6h-2.8z"/></symbol>
@@ -151,17 +177,19 @@
   <symbol id="i-globe" viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 17.93c-3.94-.49-7-3.85-7-7.93 0-.62.08-1.21.21-1.79L9 15v1c0 1.1.9 2 2 2v1.93zm6.9-2.54c-.26-.81-1-1.39-1.9-1.39h-1v-3c0-.55-.45-1-1-1H8v-2h2c.55 0 1-.45 1-1V7h2c1.1 0 2-.9 2-2v-.41c2.93 1.19 5 4.06 5 7.41 0 2.08-.8 3.97-2.1 5.39z"/></symbol>
   <symbol id="i-gift" viewBox="0 0 24 24"><path d="M20 6h-2.18c.11-.31.18-.65.18-1a2.996 2.996 0 0 0-5.5-1.65l-.5.67-.5-.68C10.96 2.54 10.05 2 9 2 7.34 2 6 3.34 6 5c0 .35.07.69.18 1H4c-1.11 0-1.99.89-1.99 2L2 19c0 1.11.89 2 2 2h16c1.11 0 2-.89 2-2V8c0-1.11-.89-2-2-2zm-5-2c.55 0 1 .45 1 1s-.45 1-1 1-1-.45-1-1 .45-1 1-1zM9 4c.55 0 1 .45 1 1s-.45 1-1 1-1-.45-1-1 .45-1 1-1zm11 15H4v-2h16v2zm0-5H4V8h5.08L7 10.83 8.62 12 11 8.76l1-1.36 1 1.36L15.38 12 17 10.83 14.92 8H20v6z"/></symbol>
   <symbol id="i-crown" viewBox="0 0 24 24"><path d="M5 16L3 5l5.5 5L12 4l3.5 6L21 5l-2 11H5zm14 3c0 .6-.4 1-1 1H6c-.6 0-1-.4-1-1v-1h14v1z"/></symbol>
+  <symbol id="i-user" viewBox="0 0 24 24"><path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/></symbol>
+  <symbol id="i-check" viewBox="0 0 24 24"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/></symbol>
+  <symbol id="i-card" viewBox="0 0 24 24"><path d="M20 4H4c-1.11 0-1.99.89-1.99 2L2 18c0 1.11.89 2 2 2h16c1.11 0 2-.89 2-2V6c0-1.11-.89-2-2-2zm0 14H4v-6h16v6zm0-10H4V6h16v2z"/></symbol>
 </svg>
 <div class="top-bar" id="topBar" style="display:none;">
   <div class="logo">ZUNO VPN</div>
-  <div class="avatar-top" id="avatarTop" onclick="openProfile()">A</div>
 </div>
 <div id="permission-screen">
   <h1><svg class="icon" style="width:32px;height:32px;fill:#a855f7"><use href="#i-shield"/></svg> Zuno VPN</h1>
   <p>Для безопасного соединения<br>разрешите уведомления</p>
   <button class="perm-btn" onclick="grantPermission()">Разрешить</button>
- </div>
- <div class="modal" id="register-modal">
+</div>
+<div class="modal" id="register-modal">
   <div class="modal-box">
     <h2><svg class="icon" style="width:22px;height:22px;fill:#a855f7"><use href="#i-shield"/></svg> Регистрация</h2>
     <p style="font-size:13px;color:#888;margin-bottom:20px;">Создайте аккаунт Zuno VPN</p>
@@ -215,6 +243,10 @@
   <button class="nav-btn" onclick="openPremium()">
     <svg><use href="#i-crown"/></svg>
     Премиум
+  </button>
+  <button class="nav-btn" onclick="openProfile()">
+    <svg><use href="#i-user"/></svg>
+    Профиль
   </button>
 </div>
 <div class="modal" id="ad-modal">
@@ -291,29 +323,73 @@
   <div class="modal-box">
     <h2><svg class="icon" style="width:22px;height:22px;fill:#a855f7"><use href="#i-crown"/></svg> Zuno Premium</h2>
     <div class="premium-header">
-      <div class="crown">👑</div>
+      <svg class="premium-icon"><use href="#i-crown"/></svg>
       <h3>Premium</h3>
       <p>Максимум возможностей</p>
     </div>
     <div class="premium-features">
-      <div class="premium-feature"><div class="dot">✓</div> 200 ГБ трафика в месяц</div>
-      <div class="premium-feature"><div class="dot">✓</div> Все серверы без ограничений</div>
-      <div class="premium-feature"><div class="dot">✓</div> Без рекламы</div>
-      <div class="premium-feature"><div class="dot">✓</div> Приоритетная скорость</div>
-      <div class="premium-feature"><div class="dot">✓</div> Колесо удачи 3 раза в день</div>
+      <div class="premium-feature"><div class="dot"><svg class="icon" style="width:12px;height:12px;fill:#22c55e"><use href="#i-check"/></svg></div> 200 ГБ трафика в месяц</div>
+      <div class="premium-feature"><div class="dot"><svg class="icon" style="width:12px;height:12px;fill:#22c55e"><use href="#i-check"/></svg></div> Все серверы без ограничений</div>
+      <div class="premium-feature"><div class="dot"><svg class="icon" style="width:12px;height:12px;fill:#22c55e"><use href="#i-check"/></svg></div> Без рекламы</div>
+      <div class="premium-feature"><div class="dot"><svg class="icon" style="width:12px;height:12px;fill:#22c55e"><use href="#i-check"/></svg></div> Приоритетная скорость</div>
+      <div class="premium-feature"><div class="dot"><svg class="icon" style="width:12px;height:12px;fill:#22c55e"><use href="#i-check"/></svg></div> Колесо удачи 3 раза в день</div>
     </div>
-    <button class="plan-btn" onclick="buyPremium('month')">
+    <button class="plan-btn" onclick="openCardPayment('month', 199)">
       <span>1 месяц</span>
       <span class="plan-price">199 ₽</span>
     </button>
-    <button class="plan-btn" onclick="buyPremium('year')">
+    <button class="plan-btn" onclick="openCardPayment('year', 1199)">
       <span>12 месяцев</span>
       <span><span class="plan-tag">−50%</span> <span class="plan-price">1199 ₽</span></span>
     </button>
     <button class="modal-close" onclick="closeModal('premium-modal')">Закрыть</button>
   </div>
-                                                    </div>
-                                                    <div class="modal" id="help-modal">
+     </div>
+        <div class="modal" id="card-modal">
+  <div class="modal-box">
+    <h2><svg class="icon" style="width:22px;height:22px;fill:#a855f7"><use href="#i-card"/></svg> Оплата</h2>
+    <p style="font-size:13px;color:#888;margin-bottom:16px;">Безопасная оплата картой</p>
+    <div class="card-form">
+      <div class="card-label">Номер карты</div>
+      <input class="card-input" id="cardNum" type="tel" placeholder="0000 0000 0000 0000" maxlength="19" autocomplete="off">
+      <div class="card-row">
+        <div style="flex:1;">
+          <div class="card-label">Срок</div>
+          <input class="card-input" id="cardExp" type="tel" placeholder="MM/YY" maxlength="5" autocomplete="off">
+        </div>
+        <div style="flex:1;">
+          <div class="card-label">CVV</div>
+          <input class="card-input" id="cardCvv" type="tel" placeholder="•••" maxlength="3" autocomplete="off">
+        </div>
+      </div>
+    </div>
+    <div class="pay-success" id="paySuccess" style="display:none;">Оплата прошла успешно!</div>
+    <button class="update-btn" id="payBtn" onclick="payCard()">Оплатить</button>
+    <button class="modal-close" onclick="closeModal('card-modal')">Отмена</button>
+  </div>
+</div>
+<div class="modal" id="toast-modal">
+  <div class="toast-modal-box">
+    <div class="toast-icon green" id="toastIconWrap">
+      <svg id="toastIconSvg" style="fill:#22c55e"><use href="#i-check" id="toastIconUse"/></svg>
+    </div>
+    <h2 id="toastTitle">Готово</h2>
+    <p id="toastText">Описание</p>
+    <button class="toast-btn" onclick="closeModal('toast-modal')">Ок</button>
+  </div>
+</div>
+<div class="modal" id="update-modal">
+  <div class="update-modal-box">
+    <h2>Вышло обновление!</h2>
+    <p>Доступна новая версия приложения<br>Размер: <span class="update-size" id="updateSize">—</span></p>
+    <div class="update-progress-wrap" id="updateProgressWrap">
+      <div class="update-progress-fill" id="updateProgressFill"></div>
+    </div>
+    <div class="update-progress-text" id="updateProgressText">Загрузка 0%</div>
+    <button class="update-btn" id="updateBtn" onclick="startUpdate()">Загрузить обновление</button>
+  </div>
+</div>
+<div class="modal" id="help-modal">
   <div class="modal-box">
     <h2><svg class="icon" style="width:22px;height:22px;fill:#a855f7"><use href="#i-shield"/></svg> Помощь</h2>
     <div class="info-text">
@@ -370,6 +446,8 @@
 <script>
   const STORAGE_KEY = 'zuno_vpn_v4';
   const USER_KEY = 'zuno_user';
+  const UPDATE_KEY = 'zuno_update_version';
+  const CURRENT_VERSION = 'v4.1';
   const SERVERS = [
     { code:'NL', flag:'🇳🇱', name:'Нидерланды', basePing:12, premium:false },
     { code:'DE', flag:'🇩🇪', name:'Германия',   basePing:24, premium:false },
@@ -422,24 +500,19 @@
   async function grantPermission() {
     if (!('Notification' in window)) { startFlow(); return; }
     await Notification.requestPermission();
-    if ('serviceWorker' in navigator) {
-      try { await navigator.serviceWorker.register('./sw.js'); } catch(e){}
-    }
+    if ('serviceWorker' in navigator) { try { await navigator.serviceWorker.register('./sw.js'); } catch(e){} }
     startFlow();
   }
   function startFlow() {
     document.getElementById('permission-screen').style.display = 'none';
-    if (!user) {
-      document.getElementById('register-modal').classList.add('active');
-    } else {
-      enterApp();
-    }
+    if (!user) { document.getElementById('register-modal').classList.add('active'); }
+    else { enterApp(); }
   }
   function doRegister() {
     const name = document.getElementById('regName').value.trim();
     const email = document.getElementById('regEmail').value.trim();
-    if (name.length < 2) { alert('Введите имя (минимум 2 символа)'); return; }
-    if (!email.includes('@') || email.length < 5) { alert('Введите корректный email'); return; }
+    if (name.length < 2) { showToast('Ошибка', 'Введите имя (минимум 2 символа)', 'red'); return; }
+    if (!email.includes('@') || email.length < 5) { showToast('Ошибка', 'Введите корректный email', 'red'); return; }
     user = { name, email, createdAt: Date.now() };
     saveUser(user);
     closeModal('register-modal');
@@ -450,7 +523,6 @@
     document.getElementById('main-screen').style.display = 'block';
     document.getElementById('bottomNav').style.display = 'flex';
     document.getElementById('footerLinks').style.display = 'flex';
-    document.getElementById('avatarTop').textContent = (user && user.name ? user.name[0].toUpperCase() : 'U');
     updateStreak();
     renderServer();
     currentPing = getServer().basePing;
@@ -460,9 +532,7 @@
       updateVPNBtn();
       document.getElementById('radar').classList.add('active');
       startTraffic(); startSpeed(); startPing();
-    } else {
-      updateVPNBtn();
-    }
+    } else { updateVPNBtn(); }
     updateTrafficUI();
   }
   function updateStreak() {
@@ -492,9 +562,7 @@
     if (state.connected) {
       state.sessions = (state.sessions||0) + 1;
       document.getElementById('radar').classList.add('active');
-    } else {
-      document.getElementById('radar').classList.remove('active');
-    }
+    } else { document.getElementById('radar').classList.remove('active'); }
     saveState();
     updateVPNBtn();
     if (state.connected) {
@@ -576,7 +644,7 @@
     if (mb >= 1024) return (mb/1024).toFixed(1) + ' ГБ';
     return Math.floor(mb) + ' МБ';
   }
-  function makeIconSvg() {
+   function makeIconSvg() {
     return 'data:image/svg+xml,' + encodeURIComponent('<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128"><defs><linearGradient id="g" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#a855f7"/><stop offset="100%" stop-color="#4c1d95"/></linearGradient><linearGradient id="bolt" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#22d3ee"/><stop offset="100%" stop-color="#3b82f6"/></linearGradient></defs><rect width="128" height="128" rx="28" fill="url(#g)"/><path d="M64 20 L100 34 v30 c0 22 -15 38 -36 46 C43 102 28 86 28 64 V34 Z" fill="rgba(255,255,255,0.12)" stroke="rgba(255,255,255,0.5)" stroke-width="3"/><path d="M70 40 L48 70 h14 l-4 20 22-32 H66 Z" fill="url(#bolt)"/></svg>');
   }
   async function showNotification(title, body, opts = {}) {
@@ -590,14 +658,25 @@
         const old = await reg.getNotifications();
         old.forEach(n => { try { n.close(); } catch(e){} });
         await reg.showNotification(title, options);
-      } else {
-        new Notification(title, options);
-      }
+      } else { new Notification(title, options); }
     } catch(e) {}
+  }
+  function showToast(title, text, type = 'green') {
+    const wrap = document.getElementById('toastIconWrap');
+    const svg = document.getElementById('toastIconSvg');
+    const use = document.getElementById('toastIconUse');
+    wrap.className = 'toast-icon ' + type;
+    if (type === 'green')  { svg.style.fill = '#22c55e'; use.setAttribute('href', '#i-check'); }
+    if (type === 'purple') { svg.style.fill = '#a855f7'; use.setAttribute('href', '#i-shield'); }
+    if (type === 'gold')   { svg.style.fill = '#f59e0b'; use.setAttribute('href', '#i-crown'); }
+    if (type === 'red')    { svg.style.fill = '#ef4444'; use.setAttribute('href', '#i-shield'); }
+    document.getElementById('toastTitle').textContent = title;
+    document.getElementById('toastText').textContent = text;
+    document.getElementById('toast-modal').classList.add('active');
   }
   let adInterval = null, adReady = false;
   function showAd() {
-    if (state.totalMB >= state.maxMB) { alert('Достигнут максимум 200 ГБ'); return; }
+    if (state.totalMB >= state.maxMB) { showToast('Лимит достигнут', 'Максимум — 200 ГБ', 'gold'); return; }
     const modal = document.getElementById('ad-modal');
     const timerEl = document.getElementById('adTimer');
     const closeBtn = document.getElementById('adClose');
@@ -629,8 +708,9 @@
     state.adsWatched = (state.adsWatched||0) + 1;
     saveState(); updateTrafficUI();
     showNotification('Трафик пополнен', '+' + formatTraffic(added) + '. Всего: ' + formatTraffic(state.totalMB));
+    showToast('Трафик пополнен', '+' + formatTraffic(added) + ' начислено', 'green');
   }
-   const WHEEL_PRIZES = [
+  const WHEEL_PRIZES = [
     { label:'100 МБ', mb:100,  color:'#7c3aed' },
     { label:'Пусто',  mb:0,    color:'#3a2a50' },
     { label:'500 МБ', mb:500,  color:'#a855f7' },
@@ -696,7 +776,8 @@
     const n = WHEEL_PRIZES.length;
     const segAngle = 360 / n;
     const winIndex = Math.floor(Math.random() * n);
-    wheelRotation += 360 * 5 + (360 - winIndex * segAngle - segAngle/2);
+    const offset = (Math.random() - 0.5) * segAngle * 0.6;
+    wheelRotation += 360 * 5 + (360 - winIndex * segAngle - segAngle/2 + offset);
     document.getElementById('wheelCanvas').style.transform = 'rotate(' + wheelRotation + 'deg)';
     setTimeout(() => {
       const prize = WHEEL_PRIZES[winIndex];
@@ -824,25 +905,97 @@
     res.classList.add('ok');
     res.textContent = '✓ Активирован ' + promo.desc + '. Начислено: ' + formatTraffic(added);
     showNotification('Промокод активирован', promo.desc + ' зачислено на счёт');
+    showToast('Промокод активирован', promo.desc + ' начислено', 'green');
   }
   function openPremium() {
     if (state.isPremium) {
       const until = state.premiumUntil ? new Date(state.premiumUntil).toLocaleDateString('ru-RU') : '';
-      alert('Premium активен до ' + until);
+      showToast('Premium активен', 'Действует до ' + until, 'gold');
       return;
     }
     document.getElementById('premium-modal').classList.add('active');
   }
-  function buyPremium(plan) {
-    const days = plan === 'year' ? 365 : 30;
-    state.isPremium = true;
-    state.premiumUntil = new Date(Date.now() + days*86400000).toISOString();
-    state.maxMB = 200 * 1024;
-    state.totalMB = Math.max(state.totalMB, 200 * 1024);
-    saveState(); updateTrafficUI();
+  let pendingPlan = null, pendingPrice = null;
+  function openCardPayment(plan, price) {
+    pendingPlan = plan;
+    pendingPrice = price;
+    document.getElementById('cardNum').value = '';
+    document.getElementById('cardExp').value = '';
+    document.getElementById('cardCvv').value = '';
+    document.getElementById('paySuccess').style.display = 'none';
+    document.getElementById('payBtn').disabled = false;
+    document.getElementById('payBtn').textContent = 'Оплатить ' + price + ' ₽';
     closeModal('premium-modal');
-    showNotification('Premium активирован', plan === 'year' ? '12 месяцев' : '1 месяц');
-    setTimeout(() => alert('Premium активирован! Все серверы разблокированы.'), 300);
+    document.getElementById('card-modal').classList.add('active');
+  }
+  function payCard() {
+    const num = document.getElementById('cardNum').value.replace(/\s/g, '');
+    const exp = document.getElementById('cardExp').value.trim();
+    const cvv = document.getElementById('cardCvv').value.trim();
+    if (num.length !== 16 || !/^\d+$/.test(num)) { showToast('Ошибка', 'Введите 16 цифр карты', 'red'); return; }
+    if (!/^\d{2}\/\d{2}$/.test(exp)) { showToast('Ошибка', 'Срок в формате MM/YY', 'red'); return; }
+    if (cvv.length !== 3 || !/^\d+$/.test(cvv)) { showToast('Ошибка', 'CVV — 3 цифры', 'red'); return; }
+    const btn = document.getElementById('payBtn');
+    btn.disabled = true;
+    btn.textContent = 'Обработка...';
+    setTimeout(() => {
+      const days = pendingPlan === 'year' ? 365 : 30;
+      state.isPremium = true;
+      state.premiumUntil = new Date(Date.now() + days*86400000).toISOString();
+      state.maxMB = 200 * 1024;
+      state.totalMB = Math.max(state.totalMB, 200 * 1024);
+      saveState(); updateTrafficUI();
+      document.getElementById('paySuccess').style.display = 'block';
+      showNotification('Premium активирован', pendingPlan === 'year' ? '12 месяцев' : '1 месяц');
+      setTimeout(() => {
+        closeModal('card-modal');
+        showToast('Premium активирован', 'Все серверы разблокированы', 'gold');
+      }, 1200);
+    }, 1800);
+  }
+  document.addEventListener('input', (e) => {
+    if (e.target.id === 'cardNum') {
+      let v = e.target.value.replace(/\D/g, '').slice(0, 16);
+      e.target.value = v.replace(/(\d{4})(?=\d)/g, '$1 ');
+    }
+    if (e.target.id === 'cardExp') {
+      let v = e.target.value.replace(/\D/g, '').slice(0, 4);
+      if (v.length >= 3) v = v.slice(0,2) + '/' + v.slice(2);
+      e.target.value = v;
+    }
+    if (e.target.id === 'cardCvv') {
+      e.target.value = e.target.value.replace(/\D/g, '').slice(0, 3);
+    }
+  });
+  let updateSize = 0;
+  function checkUpdate() {
+    const savedVersion = localStorage.getItem(UPDATE_KEY);
+    if (savedVersion === CURRENT_VERSION) return;
+    updateSize = Math.floor(Math.random() * 146) + 5;
+    document.getElementById('updateSize').textContent = updateSize + ' МБ';
+    document.getElementById('update-modal').classList.add('active');
+  }
+  function startUpdate() {
+    const btn = document.getElementById('updateBtn');
+    const wrap = document.getElementById('updateProgressWrap');
+    const fill = document.getElementById('updateProgressFill');
+    const txt = document.getElementById('updateProgressText');
+    btn.style.display = 'none';
+    wrap.style.display = 'block';
+    txt.style.display = 'block';
+    const duration = updateSize <= 80 ? 60000 : 120000;
+    const stepTime = duration / 100;
+    let progress = 0;
+    const iv = setInterval(() => {
+      progress++;
+      fill.style.width = progress + '%';
+      txt.textContent = 'Загрузка ' + progress + '%';
+      if (progress >= 100) {
+        clearInterval(iv);
+        localStorage.setItem(UPDATE_KEY, CURRENT_VERSION);
+        setTimeout(() => { closeModal('update-modal'); }, 500);
+      }
+    }, stepTime);
   }
   if ('serviceWorker' in navigator) {
     navigator.serviceWorker.addEventListener('message', (event) => {
@@ -863,6 +1016,7 @@
     }
   }
   autoCheckPermission();
+  setTimeout(checkUpdate, 1500);
 </script>
 </body>
 </html>
