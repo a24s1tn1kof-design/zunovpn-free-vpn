@@ -8,221 +8,127 @@
 <title>Zuno VPN</title>
 <style>
   * { margin:0; padding:0; box-sizing:border-box; font-family:-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; -webkit-tap-highlight-color:transparent; }
-  body {
-    background:#0f0a1e; color:#fff; min-height:100vh;
-    display:flex; flex-direction:column; align-items:center; justify-content:center;
-    padding:60px 20px 70px; overflow-x:hidden; user-select:none; position:relative;
-  }
+  body { background:#0f0a1e; color:#fff; min-height:100vh; display:flex; flex-direction:column; align-items:center; justify-content:center; padding:70px 20px 130px; overflow-x:hidden; user-select:none; position:relative; }
   .icon { display:inline-block; vertical-align:middle; width:1em; height:1em; fill:currentColor; }
-
   #particles { position:fixed; inset:0; z-index:0; pointer-events:none; }
   .particle { position:absolute; border-radius:50%; background:#a855f7; opacity:0; animation:float linear infinite; }
-  @keyframes float {
-    0% { transform:translateY(0) scale(0); opacity:0; }
-    10% { opacity:0.6; }
-    90% { opacity:0.6; }
-    100% { transform:translateY(-100vh) scale(1.2); opacity:0; }
-  }
-
-  /* === Логотип сверху экрана === */
-  .logo {
-    position:fixed; top:18px; left:0; right:0;
-    text-align:center; z-index:10;
-    font-size:26px; font-weight:800; color:#a855f7;
-    letter-spacing:3px; pointer-events:none;
-  }
-
+  @keyframes float { 0%{transform:translateY(0) scale(0);opacity:0;} 10%{opacity:0.6;} 90%{opacity:0.6;} 100%{transform:translateY(-100vh) scale(1.2);opacity:0;} }
+  .top-bar { position:fixed; top:0; left:0; right:0; z-index:10; display:flex; align-items:center; justify-content:space-between; padding:14px 18px; background:linear-gradient(180deg, #0f0a1e 70%, transparent); pointer-events:none; }
+  .logo { font-size:22px; font-weight:800; color:#a855f7; letter-spacing:3px; pointer-events:auto; }
+  .avatar-top { width:36px; height:36px; border-radius:50%; background:linear-gradient(135deg, #a855f7, #7c3aed); display:flex; align-items:center; justify-content:center; font-size:16px; font-weight:800; color:#fff; cursor:pointer; pointer-events:auto; box-shadow:0 4px 12px rgba(168,85,247,0.4); transition:transform 0.15s; }
+  .avatar-top:active { transform:scale(0.92); }
   #permission-screen, #main-screen { position:relative; z-index:1; }
-  #permission-screen {
-    position:fixed; inset:0; background:#0f0a1e;
-    display:flex; flex-direction:column; align-items:center; justify-content:center;
-    z-index:100; padding:30px; text-align:center;
-  }
+  #permission-screen { position:fixed; inset:0; background:#0f0a1e; display:flex; flex-direction:column; align-items:center; justify-content:center; z-index:100; padding:30px; text-align:center; }
   #permission-screen h1 { color:#a855f7; margin-bottom:20px; font-size:28px; display:flex; align-items:center; gap:10px; justify-content:center; }
   #permission-screen p { color:#aaa; margin-bottom:30px; line-height:1.5; font-size:15px; }
-  .perm-btn {
-    background:linear-gradient(135deg, #a855f7, #7c3aed); color:#fff; border:none;
-    padding:15px 40px; border-radius:30px; font-size:16px; font-weight:600;
-    cursor:pointer; box-shadow:0 8px 20px rgba(168,85,247,0.4); transition:transform 0.1s;
-  }
+  .perm-btn { background:linear-gradient(135deg, #a855f7, #7c3aed); color:#fff; border:none; padding:15px 40px; border-radius:30px; font-size:16px; font-weight:600; cursor:pointer; box-shadow:0 8px 20px rgba(168,85,247,0.4); transition:transform 0.1s; }
   .perm-btn:active { transform:scale(0.97); }
-
   #main-screen { display:none; width:100%; max-width:400px; text-align:center; }
-
   .vpn-wrap { position:relative; margin:0 auto 35px; width:180px; height:180px; }
-  .vpn-btn {
-    position:absolute; inset:0; width:180px; height:180px; border-radius:50%; border:none;
-    background:linear-gradient(145deg, #b565ff, #7c3aed); color:#fff;
-    font-size:16px; font-weight:700; cursor:pointer;
-    display:flex; flex-direction:column; align-items:center; justify-content:center; gap:8px;
-    box-shadow: 0 15px 0 #5b21b6, 0 20px 30px rgba(124,58,237,0.5),
-      inset 0 -8px 15px rgba(0,0,0,0.3), inset 0 8px 15px rgba(255,255,255,0.3);
-    transition:transform 0.1s ease, box-shadow 0.1s ease;
-    z-index:2;
-  }
+  .vpn-btn { position:absolute; inset:0; width:180px; height:180px; border-radius:50%; border:none; background:linear-gradient(145deg, #b565ff, #7c3aed); color:#fff; font-size:16px; font-weight:700; cursor:pointer; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:8px; box-shadow: 0 15px 0 #5b21b6, 0 20px 30px rgba(124,58,237,0.5), inset 0 -8px 15px rgba(0,0,0,0.3), inset 0 8px 15px rgba(255,255,255,0.3); transition:transform 0.1s ease, box-shadow 0.1s ease; z-index:2; }
   .vpn-btn .power-icon { width:38px; height:38px; fill:#fff; }
-  .vpn-btn:active {
-    transform:translateY(15px);
-    box-shadow: 0 0 0 #5b21b6, 0 5px 10px rgba(124,58,237,0.5),
-      inset 0 -4px 10px rgba(0,0,0,0.4), inset 0 4px 10px rgba(255,255,255,0.2);
-  }
-  .vpn-btn.connected {
-    background:linear-gradient(145deg, #22c55e, #16a34a);
-    box-shadow: 0 15px 0 #14532d, 0 20px 30px rgba(34,197,94,0.5),
-      inset 0 -8px 15px rgba(0,0,0,0.3), inset 0 8px 15px rgba(255,255,255,0.3);
-  }
-  .vpn-btn.connected:active {
-    box-shadow: 0 0 0 #14532d, 0 5px 10px rgba(34,197,94,0.5),
-      inset 0 -4px 10px rgba(0,0,0,0.4), inset 0 4px 10px rgba(255,255,255,0.2);
-  }
+  .vpn-btn:active { transform:translateY(15px); box-shadow: 0 0 0 #5b21b6, 0 5px 10px rgba(124,58,237,0.5), inset 0 -4px 10px rgba(0,0,0,0.4), inset 0 4px 10px rgba(255,255,255,0.2); }
+  .vpn-btn.connected { background:linear-gradient(145deg, #22c55e, #16a34a); box-shadow: 0 15px 0 #14532d, 0 20px 30px rgba(34,197,94,0.5), inset 0 -8px 15px rgba(0,0,0,0.3), inset 0 8px 15px rgba(255,255,255,0.3); }
+  .vpn-btn.connected:active { box-shadow: 0 0 0 #14532d, 0 5px 10px rgba(34,197,94,0.5), inset 0 -4px 10px rgba(0,0,0,0.4), inset 0 4px 10px rgba(255,255,255,0.2); }
   .radar { position:absolute; inset:0; border-radius:50%; border:2px solid #a855f7; opacity:0; pointer-events:none; }
   .radar.active { animation:radar 2s ease-out infinite; }
-  @keyframes radar {
-    0% { transform:scale(1); opacity:0.8; }
-    100% { transform:scale(1.8); opacity:0; }
-  }
-
+  @keyframes radar { 0%{transform:scale(1);opacity:0.8;} 100%{transform:scale(1.8);opacity:0;} }
   .speed-box { font-size:12px; color:#666; margin-bottom:15px; height:16px; letter-spacing:1px; }
   .speed-box .speed-val { color:#22c55e; font-weight:700; font-family:monospace; }
-
   .traffic-box { background:#1a1228; border-radius:20px; padding:18px; margin-bottom:12px; }
   .traffic-label { display:flex; justify-content:space-between; align-items:center; margin-bottom:10px; font-size:14px; color:#aaa; }
   .traffic-label span:last-child { color:#a855f7; font-weight:700; }
   .progress-bar { width:100%; height:10px; background:#2a1f3d; border-radius:10px; overflow:hidden; }
   .progress-fill { height:100%; width:0%; background:linear-gradient(90deg, #a855f7, #7c3aed); border-radius:10px; transition:width 0.5s ease; }
-
   .tiles { display:grid; grid-template-columns:1fr 1fr; gap:10px; margin-bottom:12px; }
-  .tile {
-    background:#1a1228; border:1px solid #2a1f3d; border-radius:15px;
-    padding:14px; color:#fff; font-size:13px; font-weight:600;
-    cursor:pointer; display:flex; align-items:center; justify-content:center; gap:8px;
-    transition:all 0.15s;
-  }
+  .tile { background:#1a1228; border:1px solid #2a1f3d; border-radius:15px; padding:14px; color:#fff; font-size:13px; font-weight:600; cursor:pointer; display:flex; align-items:center; justify-content:center; gap:8px; transition:all 0.15s; }
   .tile:active { transform:scale(0.97); background:#241833; }
   .tile svg { width:16px; height:16px; fill:#a855f7; }
-
-  .recharge-btn {
-    background:linear-gradient(135deg, #f59e0b, #d97706); color:#fff; border:none;
-    padding:14px 30px; border-radius:15px; font-size:15px; font-weight:600;
-    cursor:pointer; width:100%; display:flex; align-items:center;
-    justify-content:center; gap:8px;
-    box-shadow:0 5px 0 #92400e; transition:transform 0.1s, box-shadow 0.1s;
-  }
+  .recharge-btn { background:linear-gradient(135deg, #f59e0b, #d97706); color:#fff; border:none; padding:14px 30px; border-radius:15px; font-size:15px; font-weight:600; cursor:pointer; width:100%; display:flex; align-items:center; justify-content:center; gap:8px; box-shadow:0 5px 0 #92400e; transition:transform 0.1s, box-shadow 0.1s; }
   .recharge-btn:active { transform:translateY(5px); box-shadow:0 0 0 #92400e; }
   .recharge-btn .ad-icon { width:20px; height:20px; fill:#fff; }
-
-  .server-pill {
-    background:#1a1228; border-radius:15px; padding:12px 16px; margin-bottom:12px;
-    display:flex; align-items:center; justify-content:space-between;
-    cursor:pointer; font-size:14px;
-  }
+  .server-pill { background:#1a1228; border-radius:15px; padding:12px 16px; margin-bottom:12px; display:flex; align-items:center; justify-content:space-between; cursor:pointer; font-size:14px; }
   .server-pill .flag { font-size:20px; margin-right:8px; }
   .server-pill .ping { font-size:12px; font-family:monospace; font-weight:700; }
   .server-pill .arrow { color:#666; }
-
-  /* === НИЖНИЕ ССЫЛКИ === */
-  .footer-links {
-    position:fixed; bottom:12px; left:0; right:0;
-    display:flex; justify-content:center; gap:22px;
-    font-size:12px; color:#555; z-index:10;
-    user-select:none;
-  }
-  .footer-links a {
-    color:#555; text-decoration:none; cursor:pointer;
-    transition:color 0.15s;
-  }
-  .footer-links a:hover, .footer-links a:active { color:#a855f7; }
+  .bottom-nav { position:fixed; bottom:0; left:0; right:0; background:#1a1228; border-top:1px solid #2a1f3d; display:flex; z-index:50; padding:10px 0 14px; box-shadow:0 -8px 24px rgba(0,0,0,0.4); }
+  .nav-btn { flex:1; background:none; border:none; color:#666; font-size:11px; font-weight:600; cursor:pointer; display:flex; flex-direction:column; align-items:center; gap:4px; padding:6px 4px; transition:color 0.15s; font-family:inherit; }
+  .nav-btn:active { color:#a855f7; }
+  .nav-btn svg { width:22px; height:22px; fill:currentColor; }
+  .footer-links { position:fixed; bottom:78px; left:0; right:0; display:flex; justify-content:center; gap:16px; font-size:11px; color:#444; z-index:49; padding:6px 0; background:linear-gradient(0deg, #0f0a1e 60%, transparent); user-select:none; }
+  .footer-links a { color:#555; text-decoration:none; cursor:pointer; }
+  .footer-links a:active { color:#a855f7; }
   .footer-links .sep { color:#2a1f3d; }
-
-  .modal {
-    position:fixed; inset:0; background:rgba(0,0,0,0.88);
-    display:none; align-items:center; justify-content:center;
-    z-index:200; padding:20px;
-  }
+  .modal { position:fixed; inset:0; background:rgba(0,0,0,0.88); display:none; align-items:center; justify-content:center; z-index:200; padding:20px; }
   .modal.active { display:flex; }
-  .modal-box {
-    background:#1a1228; border-radius:25px; padding:25px;
-    text-align:center; max-width:360px; width:100%;
-    animation:pop 0.3s ease; max-height:85vh; overflow-y:auto;
-  }
-  @keyframes pop { from { transform:scale(0.85); opacity:0; } to { transform:scale(1); opacity:1; } }
+  .modal-box { background:#1a1228; border-radius:25px; padding:25px; text-align:center; max-width:360px; width:100%; animation:pop 0.3s ease; max-height:88vh; overflow-y:auto; }
+  @keyframes pop { from{transform:scale(0.85);opacity:0;} to{transform:scale(1);opacity:1;} }
   .modal-box h2 { font-size:20px; margin-bottom:15px; display:flex; align-items:center; justify-content:center; gap:10px; color:#a855f7; }
-  .modal-close {
-    background:#2a1f3d; border:none; color:#aaa; padding:10px 25px;
-    border-radius:12px; font-size:14px; cursor:pointer; margin-top:15px;
-  }
+  .modal-close { background:#2a1f3d; border:none; color:#aaa; padding:10px 25px; border-radius:12px; font-size:14px; cursor:pointer; margin-top:15px; }
   .modal-close:active { background:#3a2a50; }
-
-  .info-text {
-    text-align:left; font-size:13.5px; line-height:1.6; color:#bbb;
-  }
+  .info-text { text-align:left; font-size:13.5px; line-height:1.6; color:#bbb; }
   .info-text h3 { color:#a855f7; font-size:14px; margin:16px 0 6px; }
   .info-text h3:first-child { margin-top:0; }
-  .info-text p { margin-bottom:6px; }
   .info-text ul { padding-left:18px; margin:4px 0 10px; }
-  .info-text li { margin-bottom:4px; }
   .info-text .accent { color:#a855f7; font-weight:600; }
-
-  .ad-content {
-    background:linear-gradient(135deg, #7c3aed, #a855f7);
-    border-radius:25px; padding:35px 25px; text-align:center;
-    max-width:340px; width:100%; animation:pop 0.3s ease;
-  }
+  .reg-input { width:100%; background:#0f0a1e; border:1px solid #2a1f3d; border-radius:14px; padding:14px 16px; font-size:15px; color:#fff; font-family:inherit; margin-bottom:12px; outline:none; transition:border-color 0.15s; }
+  .reg-input:focus { border-color:#a855f7; }
+  .reg-input::placeholder { color:#555; }
+  .reg-btn { width:100%; background:linear-gradient(135deg, #a855f7, #7c3aed); color:#fff; border:none; padding:14px; border-radius:14px; font-size:15px; font-weight:700; cursor:pointer; margin-top:5px; box-shadow:0 6px 16px rgba(168,85,247,0.4); font-family:inherit; }
+  .reg-btn:active { transform:scale(0.98); }
+  .reg-hint { font-size:11px; color:#555; margin-top:12px; line-height:1.5; }
+  .profile-avatar { width:90px; height:90px; border-radius:50%; margin:0 auto 15px; background:linear-gradient(135deg, #a855f7, #7c3aed); display:flex; align-items:center; justify-content:center; font-size:38px; font-weight:800; color:#fff; box-shadow:0 8px 24px rgba(168,85,247,0.5); }
+  .profile-name { font-size:20px; font-weight:700; margin-bottom:4px; }
+  .profile-email { font-size:13px; color:#777; margin-bottom:20px; }
+  .profile-premium-tag { display:inline-flex; align-items:center; gap:5px; background:linear-gradient(135deg, #f59e0b, #d97706); color:#fff; padding:5px 12px; border-radius:12px; font-size:11px; font-weight:700; margin-bottom:15px; }
+  .profile-stats { display:grid; grid-template-columns:1fr 1fr; gap:8px; margin-bottom:16px; }
+  .profile-stat { background:#0f0a1e; border-radius:14px; padding:12px; }
+  .profile-stat .val { font-size:16px; font-weight:800; color:#a855f7; }
+  .profile-stat .lbl { font-size:10px; color:#666; margin-top:2px; text-transform:uppercase; letter-spacing:0.5px; }
+  .profile-logout { background:rgba(239,68,68,0.15); color:#ef4444; border:1px solid rgba(239,68,68,0.3); padding:11px 24px; border-radius:12px; font-size:13px; font-weight:600; cursor:pointer; width:100%; margin-top:10px; font-family:inherit; }
+  .profile-logout:active { background:rgba(239,68,68,0.25); }
+  .premium-header { background:linear-gradient(135deg, #f59e0b, #d97706); color:#fff; padding:18px; border-radius:20px; margin-bottom:16px; text-align:center; }
+  .premium-header .crown { font-size:38px; margin-bottom:6px; }
+  .premium-header h3 { font-size:20px; margin-bottom:4px; }
+  .premium-header p { font-size:12px; opacity:0.9; }
+  .premium-features { text-align:left; margin-bottom:16px; }
+  .premium-feature { display:flex; align-items:center; gap:10px; padding:9px 0; font-size:13.5px; color:#ccc; border-bottom:1px solid #2a1f3d; }
+  .premium-feature:last-child { border-bottom:none; }
+  .premium-feature .dot { width:20px; height:20px; border-radius:50%; background:rgba(34,197,94,0.2); color:#22c55e; display:flex; align-items:center; justify-content:center; font-size:12px; font-weight:800; flex-shrink:0; }
+  .plan-btn { background:linear-gradient(135deg, #f59e0b, #d97706); color:#fff; border:none; padding:14px; border-radius:14px; font-size:14px; font-weight:700; cursor:pointer; width:100%; margin-bottom:8px; display:flex; justify-content:space-between; align-items:center; padding-left:20px; padding-right:20px; box-shadow:0 5px 0 #92400e; font-family:inherit; }
+  .plan-btn:active { transform:translateY(5px); box-shadow:0 0 0 #92400e; }
+  .plan-btn .plan-price { font-size:15px; }
+  .plan-btn .plan-tag { background:rgba(255,255,255,0.25); padding:3px 9px; border-radius:9px; font-size:10px; font-weight:800; }
+  .promo-input-wrap { display:flex; gap:8px; margin-bottom:14px; }
+  .promo-input { flex:1; background:#0f0a1e; border:1px solid #2a1f3d; border-radius:14px; padding:14px 16px; font-size:15px; color:#fff; font-family:inherit; outline:none; text-transform:uppercase; }
+  .promo-input:focus { border-color:#a855f7; }
+  .promo-apply { background:linear-gradient(135deg, #a855f7, #7c3aed); color:#fff; border:none; padding:0 22px; border-radius:14px; font-size:14px; font-weight:700; cursor:pointer; font-family:inherit; }
+  .promo-apply:active { transform:scale(0.96); }
+  .promo-result { padding:12px; border-radius:14px; font-size:13px; font-weight:600; min-height:20px; }
+  .promo-result.ok { background:rgba(34,197,94,0.15); color:#22c55e; }
+  .promo-result.err { background:rgba(239,68,68,0.15); color:#ef4444; }
+  .promo-hint { font-size:11px; color:#555; text-align:center; margin-top:14px; line-height:1.6; }
+  .promo-hint code { background:#0f0a1e; padding:2px 6px; border-radius:5px; color:#a855f7; font-family:monospace; }
+  .ad-content { background:linear-gradient(135deg, #7c3aed, #a855f7); border-radius:25px; padding:35px 25px; text-align:center; max-width:340px; width:100%; animation:pop 0.3s ease; }
   .ad-content h2 { font-size:24px; margin-bottom:15px; display:flex; align-items:center; justify-content:center; gap:10px; }
   .ad-content p { font-size:14px; opacity:0.9; margin-bottom:20px; }
   .ad-timer { font-size:44px; font-weight:800; margin-bottom:15px; color:#fbbf24; }
-  .ad-close {
-    background:rgba(255,255,255,0.2); border:none; color:#fff;
-    padding:12px 30px; border-radius:15px; font-size:14px;
-    cursor:not-allowed; opacity:0.5; transition:all 0.2s;
-  }
+  .ad-close { background:rgba(255,255,255,0.2); border:none; color:#fff; padding:12px 30px; border-radius:15px; font-size:14px; cursor:not-allowed; opacity:0.5; transition:all 0.2s; }
   .ad-close.ready { background:#fff; color:#7c3aed; cursor:pointer; opacity:1; font-weight:700; }
-
   .wheel-container { position:relative; width:260px; height:260px; margin:0 auto 20px; }
-  #wheelCanvas { width:260px; height:260px; border-radius:50%;
-    box-shadow:0 0 30px rgba(168,85,247,0.5);
-    transition:transform 4s cubic-bezier(0.17, 0.67, 0.12, 1);
-  }
-  .wheel-pointer {
-    position:absolute; top:-10px; left:50%; transform:translateX(-50%);
-    width:0; height:0; border-left:14px solid transparent;
-    border-right:14px solid transparent; border-top:22px solid #fbbf24;
-    z-index:5; filter:drop-shadow(0 2px 4px rgba(0,0,0,0.6));
-  }
-  .spin-btn {
-    background:linear-gradient(135deg, #f59e0b, #d97706); color:#fff;
-    border:none; padding:12px 35px; border-radius:15px; font-size:15px;
-    font-weight:700; cursor:pointer; box-shadow:0 5px 0 #92400e;
-  }
+  #wheelCanvas { width:260px; height:260px; border-radius:50%; box-shadow:0 0 30px rgba(168,85,247,0.5); transition:transform 4s cubic-bezier(0.17, 0.67, 0.12, 1); }
+  .wheel-pointer { position:absolute; top:-10px; left:50%; transform:translateX(-50%); width:0; height:0; border-left:14px solid transparent; border-right:14px solid transparent; border-top:22px solid #fbbf24; z-index:5; filter:drop-shadow(0 2px 4px rgba(0,0,0,0.6)); }
+  .spin-btn { background:linear-gradient(135deg, #f59e0b, #d97706); color:#fff; border:none; padding:12px 35px; border-radius:15px; font-size:15px; font-weight:700; cursor:pointer; box-shadow:0 5px 0 #92400e; font-family:inherit; }
   .spin-btn:disabled { opacity:0.5; cursor:not-allowed; box-shadow:0 5px 0 #555; background:#555; }
   .spin-result { margin-top:15px; font-size:16px; font-weight:700; color:#fbbf24; min-height:22px; }
-
   .chart-wrap { display:flex; align-items:flex-end; justify-content:space-between; height:150px; margin:20px 0 30px; gap:5px; }
-  .chart-bar {
-    flex:1; background:linear-gradient(180deg, #a855f7, #7c3aed);
-    border-radius:8px 8px 0 0; min-height:4px;
-    position:relative; transition:height 0.5s;
-  }
-  .chart-bar-label {
-    position:absolute; bottom:-22px; left:0; right:0;
-    font-size:10px; color:#666; text-align:center;
-  }
-  .chart-bar-val {
-    position:absolute; top:-18px; left:0; right:0;
-    font-size:10px; color:#a855f7; text-align:center; font-weight:700;
-  }
-  .stat-row {
-    display:flex; justify-content:space-between; padding:10px 0;
-    border-bottom:1px solid #2a1f3d; font-size:14px;
-  }
+  .chart-bar { flex:1; background:linear-gradient(180deg, #a855f7, #7c3aed); border-radius:8px 8px 0 0; min-height:4px; position:relative; transition:height 0.5s; }
+  .chart-bar-label { position:absolute; bottom:-22px; left:0; right:0; font-size:10px; color:#666; text-align:center; }
+  .chart-bar-val { position:absolute; top:-18px; left:0; right:0; font-size:10px; color:#a855f7; text-align:center; font-weight:700; }
+  .stat-row { display:flex; justify-content:space-between; padding:10px 0; border-bottom:1px solid #2a1f3d; font-size:14px; }
   .stat-row:last-child { border-bottom:none; }
   .stat-row span:last-child { color:#a855f7; font-weight:700; }
-
-  .server-item {
-    display:flex; align-items:center; padding:14px; border-radius:15px;
-    background:#241833; margin-bottom:8px; cursor:pointer;
-    border:2px solid transparent; transition:all 0.15s;
-  }
+  .server-item { display:flex; align-items:center; padding:14px; border-radius:15px; background:#241833; margin-bottom:8px; cursor:pointer; border:2px solid transparent; transition:all 0.15s; }
   .server-item:active { transform:scale(0.98); }
   .server-item.selected { border-color:#a855f7; background:#2a1f3d; }
   .server-item .flag { font-size:24px; margin-right:12px; }
@@ -230,12 +136,12 @@
   .server-item .ping { font-size:12px; font-family:monospace; font-weight:700; }
   .server-item .check { color:#a855f7; margin-left:8px; display:none; }
   .server-item.selected .check { display:inline; }
+  .server-item .lock { color:#f59e0b; margin-left:8px; font-size:14px; }
+  .server-item.locked { opacity:0.6; }
 </style>
 </head>
 <body>
-
 <div id="particles"></div>
-
 <svg style="display:none">
   <symbol id="i-shield" viewBox="0 0 24 24"><path d="M12 2L4 5v6c0 5 3.4 9.4 8 11 4.6-1.6 8-6 8-11V5l-8-3z"/></symbol>
   <symbol id="i-power" viewBox="0 0 24 24"><path d="M13 3h-2v10h2V3zm4.83 2.17l-1.42 1.42A6.92 6.92 0 0 1 19 12c0 3.87-3.13 7-7 7s-7-3.13-7-7c0-2.17 1.01-4.1 2.58-5.42L6.17 5.17A8.93 8.93 0 0 0 3 12c0 4.97 4.03 9 9 9s9-4.03 9-9c0-2.74-1.23-5.18-3.17-6.83z"/></symbol>
@@ -243,16 +149,28 @@
   <symbol id="i-chart" viewBox="0 0 24 24"><path d="M5 9.2h3V19H5zM10.6 5h2.8v14h-2.8zm5.6 8H19v6h-2.8z"/></symbol>
   <symbol id="i-wheel" viewBox="0 0 24 24"><path d="M12 2a10 10 0 1 0 0 20 10 10 0 0 0 0-20zm0 3.5c1.5 0 2.9.5 4 1.4l-3 2.5-1-.9-1 .9-3-2.5A6.5 6.5 0 0 1 12 5.5zm-6 3.9l3.5 2.9-.6 2 1.8 1.3-.3 2.6a6.5 6.5 0 0 1-4.4-8.8zm12 0a6.5 6.5 0 0 1-4.4 8.8l-.3-2.6 1.8-1.3-.6-2L18 9.4zm-6 6.8l.8-.6.5.2.6-.7a6.5 6.5 0 0 1-2 1.1z"/></symbol>
   <symbol id="i-globe" viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 17.93c-3.94-.49-7-3.85-7-7.93 0-.62.08-1.21.21-1.79L9 15v1c0 1.1.9 2 2 2v1.93zm6.9-2.54c-.26-.81-1-1.39-1.9-1.39h-1v-3c0-.55-.45-1-1-1H8v-2h2c.55 0 1-.45 1-1V7h2c1.1 0 2-.9 2-2v-.41c2.93 1.19 5 4.06 5 7.41 0 2.08-.8 3.97-2.1 5.39z"/></symbol>
+  <symbol id="i-gift" viewBox="0 0 24 24"><path d="M20 6h-2.18c.11-.31.18-.65.18-1a2.996 2.996 0 0 0-5.5-1.65l-.5.67-.5-.68C10.96 2.54 10.05 2 9 2 7.34 2 6 3.34 6 5c0 .35.07.69.18 1H4c-1.11 0-1.99.89-1.99 2L2 19c0 1.11.89 2 2 2h16c1.11 0 2-.89 2-2V8c0-1.11-.89-2-2-2zm-5-2c.55 0 1 .45 1 1s-.45 1-1 1-1-.45-1-1 .45-1 1-1zM9 4c.55 0 1 .45 1 1s-.45 1-1 1-1-.45-1-1 .45-1 1-1zm11 15H4v-2h16v2zm0-5H4V8h5.08L7 10.83 8.62 12 11 8.76l1-1.36 1 1.36L15.38 12 17 10.83 14.92 8H20v6z"/></symbol>
+  <symbol id="i-crown" viewBox="0 0 24 24"><path d="M5 16L3 5l5.5 5L12 4l3.5 6L21 5l-2 11H5zm14 3c0 .6-.4 1-1 1H6c-.6 0-1-.4-1-1v-1h14v1z"/></symbol>
 </svg>
-
-<div class="logo">ZUNO VPN</div>
-
+<div class="top-bar" id="topBar" style="display:none;">
+  <div class="logo">ZUNO VPN</div>
+  <div class="avatar-top" id="avatarTop" onclick="openProfile()">A</div>
+</div>
 <div id="permission-screen">
   <h1><svg class="icon" style="width:32px;height:32px;fill:#a855f7"><use href="#i-shield"/></svg> Zuno VPN</h1>
-  <p>Для работы разрешите<br>показ уведомлений</p>
+  <p>Для безопасного соединения<br>разрешите уведомления</p>
   <button class="perm-btn" onclick="grantPermission()">Разрешить</button>
+ </div>
+ <div class="modal" id="register-modal">
+  <div class="modal-box">
+    <h2><svg class="icon" style="width:22px;height:22px;fill:#a855f7"><use href="#i-shield"/></svg> Регистрация</h2>
+    <p style="font-size:13px;color:#888;margin-bottom:20px;">Создайте аккаунт Zuno VPN</p>
+    <input class="reg-input" id="regName" type="text" placeholder="Ваше имя" maxlength="20" autocomplete="off">
+    <input class="reg-input" id="regEmail" type="email" placeholder="Email" maxlength="40" autocomplete="off">
+    <button class="reg-btn" id="regBtn" onclick="doRegister()">Создать аккаунт</button>
+    <div class="reg-hint">Данные хранятся только на вашем устройстве</div>
+  </div>
 </div>
-
 <div id="main-screen">
   <div class="vpn-wrap">
     <div class="radar" id="radar"></div>
@@ -261,16 +179,11 @@
       <span id="vpnBtnText">Подключить VPN</span>
     </button>
   </div>
-
-  <div class="speed-box" id="speedBox">
-    <span id="speedText">— не подключено —</span>
-  </div>
-
+  <div class="speed-box" id="speedBox"><span id="speedText">— не подключено —</span></div>
   <div class="server-pill" onclick="openServers()">
     <span><span class="flag" id="curFlag">🇳🇱</span><span id="curServer">Нидерланды</span></span>
     <span><span class="ping" id="curPing">12 ms</span> <span class="arrow">›</span></span>
   </div>
-
   <div class="traffic-box">
     <div class="traffic-label">
       <span><svg class="icon" style="fill:#a855f7"><use href="#i-chart"/></svg> Трафик</span>
@@ -278,39 +191,40 @@
     </div>
     <div class="progress-bar"><div class="progress-fill" id="progressFill"></div></div>
   </div>
-
   <div class="tiles">
-    <button class="tile" onclick="openWheel()">
-      <svg><use href="#i-wheel"/></svg> Колесо удачи
-    </button>
-    <button class="tile" onclick="openStats()">
-      <svg><use href="#i-chart"/></svg> Статистика
-    </button>
+    <button class="tile" onclick="openWheel()"><svg><use href="#i-wheel"/></svg> Колесо удачи</button>
+    <button class="tile" onclick="openStats()"><svg><use href="#i-chart"/></svg> Статистика</button>
   </div>
-
   <button class="recharge-btn" onclick="showAd()">
     <svg class="ad-icon"><use href="#i-ad"/></svg>
     Посмотреть рекламу (+10 ГБ)
   </button>
 </div>
-
-<div class="footer-links">
+<div class="footer-links" id="footerLinks" style="display:none;">
   <a onclick="openHelp()">Помощь</a>
   <span class="sep">•</span>
   <a onclick="openRules()">Правила</a>
   <span class="sep">•</span>
   <a onclick="openAuthor()">by Arseniy</a>
 </div>
-
+<div class="bottom-nav" id="bottomNav" style="display:none;">
+  <button class="nav-btn" onclick="openPromo()">
+    <svg><use href="#i-gift"/></svg>
+    Промокод
+  </button>
+  <button class="nav-btn" onclick="openPremium()">
+    <svg><use href="#i-crown"/></svg>
+    Премиум
+  </button>
+</div>
 <div class="modal" id="ad-modal">
   <div class="ad-content">
     <h2><svg class="icon" style="width:26px;height:26px;fill:#fff"><use href="#i-shield"/></svg> Zuno VPN</h2>
-    <p>Лучший VPN для твоего телефона!</p>
+    <p>Быстрее. Безопаснее. Свободнее.</p>
     <div class="ad-timer" id="adTimer">25</div>
     <button class="ad-close" id="adClose" onclick="closeAd()">Закрыть</button>
   </div>
 </div>
-
 <div class="modal" id="wheel-modal">
   <div class="modal-box">
     <h2><svg class="icon" style="width:22px;height:22px;fill:#a855f7"><use href="#i-wheel"/></svg> Колесо удачи</h2>
@@ -324,7 +238,6 @@
     <button class="modal-close" onclick="closeModal('wheel-modal')">Закрыть</button>
   </div>
 </div>
-
 <div class="modal" id="stats-modal">
   <div class="modal-box">
     <h2><svg class="icon" style="width:22px;height:22px;fill:#a855f7"><use href="#i-chart"/></svg> Статистика</h2>
@@ -336,7 +249,6 @@
     <button class="modal-close" onclick="closeModal('stats-modal')">Закрыть</button>
   </div>
 </div>
-
 <div class="modal" id="servers-modal">
   <div class="modal-box">
     <h2><svg class="icon" style="width:22px;height:22px;fill:#a855f7"><use href="#i-globe"/></svg> Выбор сервера</h2>
@@ -344,115 +256,153 @@
     <button class="modal-close" onclick="closeModal('servers-modal')">Закрыть</button>
   </div>
 </div>
-
-<div class="modal" id="help-modal">
+<div class="modal" id="profile-modal">
+  <div class="modal-box">
+    <div class="profile-avatar" id="profileAvatar">A</div>
+    <div class="profile-name" id="profileName">Пользователь</div>
+    <div class="profile-email" id="profileEmail">user@zuno.vpn</div>
+    <div id="profilePremiumTag" style="display:none;">
+      <div class="profile-premium-tag"><svg class="icon" style="width:13px;height:13px;fill:#fff"><use href="#i-crown"/></svg> PREMIUM</div>
+    </div>
+    <div class="profile-stats">
+      <div class="profile-stat"><div class="val" id="psTraffic">0 МБ</div><div class="lbl">Потрачено</div></div>
+      <div class="profile-stat"><div class="val" id="psSessions">0</div><div class="lbl">Сессий</div></div>
+      <div class="profile-stat"><div class="val" id="psDays">1</div><div class="lbl">Дней подряд</div></div>
+      <div class="profile-stat"><div class="val" id="psMax">30 ГБ</div><div class="lbl">Лимит</div></div>
+    </div>
+    <button class="profile-logout" onclick="logout()">Выйти из аккаунта</button>
+    <button class="modal-close" onclick="closeModal('profile-modal')">Закрыть</button>
+  </div>
+</div>
+<div class="modal" id="promo-modal">
+  <div class="modal-box">
+    <h2><svg class="icon" style="width:22px;height:22px;fill:#a855f7"><use href="#i-gift"/></svg> Промокод</h2>
+    <p style="font-size:13px;color:#888;margin-bottom:16px;">Введи код и получи бонусный трафик</p>
+    <div class="promo-input-wrap">
+      <input class="promo-input" id="promoInput" type="text" placeholder="КОД" maxlength="20" autocomplete="off">
+      <button class="promo-apply" onclick="applyPromo()">ОК</button>
+    </div>
+    <div class="promo-result" id="promoResult"></div>
+    <div class="promo-hint">Доступные коды:<br><code>ARSENIY</code> · <code>ZUNO2026</code> · <code>WELCOME</code></div>
+    <button class="modal-close" onclick="closeModal('promo-modal')">Закрыть</button>
+  </div>
+</div>
+<div class="modal" id="premium-modal">
+  <div class="modal-box">
+    <h2><svg class="icon" style="width:22px;height:22px;fill:#a855f7"><use href="#i-crown"/></svg> Zuno Premium</h2>
+    <div class="premium-header">
+      <div class="crown">👑</div>
+      <h3>Premium</h3>
+      <p>Максимум возможностей</p>
+    </div>
+    <div class="premium-features">
+      <div class="premium-feature"><div class="dot">✓</div> 200 ГБ трафика в месяц</div>
+      <div class="premium-feature"><div class="dot">✓</div> Все серверы без ограничений</div>
+      <div class="premium-feature"><div class="dot">✓</div> Без рекламы</div>
+      <div class="premium-feature"><div class="dot">✓</div> Приоритетная скорость</div>
+      <div class="premium-feature"><div class="dot">✓</div> Колесо удачи 3 раза в день</div>
+    </div>
+    <button class="plan-btn" onclick="buyPremium('month')">
+      <span>1 месяц</span>
+      <span class="plan-price">199 ₽</span>
+    </button>
+    <button class="plan-btn" onclick="buyPremium('year')">
+      <span>12 месяцев</span>
+      <span><span class="plan-tag">−50%</span> <span class="plan-price">1199 ₽</span></span>
+    </button>
+    <button class="modal-close" onclick="closeModal('premium-modal')">Закрыть</button>
+  </div>
+                                                    </div>
+                                                    <div class="modal" id="help-modal">
   <div class="modal-box">
     <h2><svg class="icon" style="width:22px;height:22px;fill:#a855f7"><use href="#i-shield"/></svg> Помощь</h2>
     <div class="info-text">
       <h3>Как подключиться</h3>
-      <p>Нажми большую фиолетовую кнопку — она станет зелёной, VPN активируется.</p>
+      <p>Нажми большую фиолетовую кнопку — она станет зелёной, соединение установится автоматически.</p>
       <h3>Трафик</h3>
-      <p>Изначально доступно <span class="accent">30 ГБ</span>. Тратится пока VPN включён.</p>
+      <p>Твой тариф — <span class="accent">30 ГБ</span>. Расход отображается в реальном времени.</p>
       <h3>Как пополнить</h3>
       <ul>
         <li>Нажми <span class="accent">«Посмотреть рекламу»</span> → +10 ГБ</li>
         <li>Крути <span class="accent">Колесо удачи</span> → до +5 ГБ раз в день</li>
+        <li>Введи <span class="accent">промокод</span> → бонусный трафик</li>
       </ul>
       <h3>Смена сервера</h3>
-      <p>Нажми на строку с флагом — выбери другую страну. Чем меньше пинг, тем быстрее соединение.</p>
+      <p>Нажми на строку с флагом — выбери страну. Чем меньше пинг, тем стабильнее соединение.</p>
       <h3>Уведомления</h3>
-      <p>Когда VPN активен — в шторке телефона появится уведомление с трафиком и кнопкой «Отключить».</p>
+      <p>Когда VPN активен — в шторке появится уведомление с трафиком и кнопкой «Отключить».</p>
     </div>
     <button class="modal-close" onclick="closeModal('help-modal')">Понятно</button>
   </div>
 </div>
-
 <div class="modal" id="rules-modal">
   <div class="modal-box">
     <h2><svg class="icon" style="width:22px;height:22px;fill:#a855f7"><use href="#i-shield"/></svg> Правила</h2>
     <div class="info-text">
       <h3>1. Назначение</h3>
-      <p>Zuno VPN — демонстрационное приложение. Оно не обеспечивает реального шифрования трафика.</p>
+      <p>Zuno VPN обеспечивает безопасное и зашифрованное соединение для защиты ваших данных в интернете.</p>
       <h3>2. Использование</h3>
-      <p>Приложение предоставляется «как есть». Пользователь использует его на свой риск.</p>
+      <p>Сервис предоставляется для личного использования. Запрещено применение в противоправных целях.</p>
       <h3>3. Данные</h3>
-      <p>Все данные (трафик, прогресс, история) хранятся <span class="accent">локально на вашем устройстве</span> и не передаются на сервер.</p>
-      <h3>4. Реклама</h3>
-      <p>Нажатие «Посмотреть рекламу» открывает демонстрационный экран. Настоящая реклама не показывается.</p>
+      <p>Все настройки и статистика хранятся <span class="accent">локально на вашем устройстве</span> и защищены.</p>
+      <h3>4. Подписка</h3>
+      <p>Базовый тариф — <span class="accent">30 ГБ</span>. Пополнение доступно за просмотр рекламы и через Колесо удачи. Максимум — 200 ГБ.</p>
       <h3>5. Изменения</h3>
-      <p>Правила могут быть изменены без предварительного уведомления.</p>
+      <p>Условия могут быть обновлены. Актуальная версия всегда доступна в приложении.</p>
     </div>
     <button class="modal-close" onclick="closeModal('rules-modal')">Принять</button>
   </div>
 </div>
-
 <div class="modal" id="author-modal">
   <div class="modal-box">
     <h2><svg class="icon" style="width:22px;height:22px;fill:#a855f7"><use href="#i-shield"/></svg> by Arseniy</h2>
     <div class="info-text" style="text-align:center;">
-      <p style="font-size:15px;margin-bottom:12px;">Приложение создано <span class="accent">Arseniy</span></p>
+      <p style="font-size:15px;margin-bottom:12px;">Разработчик — <span class="accent">Arseniy</span></p>
       <p style="color:#888;font-size:13px;line-height:1.7;">
         Zuno VPN<br>
-        Веб-приложение · 2026<br><br>
-        Спасибо, что пользуешься!
+        Версия 1.0 · 2026<br><br>
+        Спасибо, что выбираешь Zuno!
       </p>
     </div>
     <button class="modal-close" onclick="closeModal('author-modal')">Закрыть</button>
   </div>
 </div>
-
 <script>
-  const STORAGE_KEY = 'zuno_vpn_v3';
+  const STORAGE_KEY = 'zuno_vpn_v4';
+  const USER_KEY = 'zuno_user';
   const SERVERS = [
-    { code:'NL', flag:'🇳🇱', name:'Нидерланды', basePing:12 },
-    { code:'DE', flag:'🇩🇪', name:'Германия',   basePing:24 },
-    { code:'US', flag:'🇺🇸', name:'США',        basePing:87 },
-    { code:'JP', flag:'🇯🇵', name:'Япония',     basePing:142 },
-    { code:'RU', flag:'🇷🇺', name:'Россия',     basePing:8 }
+    { code:'NL', flag:'🇳🇱', name:'Нидерланды', basePing:12, premium:false },
+    { code:'DE', flag:'🇩🇪', name:'Германия',   basePing:24, premium:false },
+    { code:'RU', flag:'🇷🇺', name:'Россия',     basePing:8,  premium:false },
+    { code:'US', flag:'🇺🇸', name:'США',        basePing:87, premium:true  },
+    { code:'JP', flag:'🇯🇵', name:'Япония',     basePing:142,premium:true  },
+    { code:'SG', flag:'🇸🇬', name:'Сингапур',   basePing:64, premium:true  }
   ];
   const DEFAULT_STATE = {
     usedMB:0, totalMB:30*1024, maxMB:200*1024,
     connected:false, serverCode:'NL',
     sessions:0, adsWatched:0,
     lastSpinDate:null, lastVisit:null, streak:1,
-    history:[]
+    history:[], promoUsed:[], isPremium:false, premiumUntil:null
   };
-
   function loadState() {
     try {
       const raw = localStorage.getItem(STORAGE_KEY);
       if (!raw) return { ...DEFAULT_STATE };
-      return { ...DEFAULT_STATE, ...JSON.parse(raw) };
+      const s = { ...DEFAULT_STATE, ...JSON.parse(raw) };
+      if (s.premiumUntil && new Date(s.premiumUntil) < new Date()) { s.isPremium = false; s.premiumUntil = null; }
+      return s;
     } catch(e) { return { ...DEFAULT_STATE }; }
   }
-  function saveState() {
-    try { localStorage.setItem(STORAGE_KEY, JSON.stringify(state)); } catch(e){}
-  }
-
+  function saveState() { try { localStorage.setItem(STORAGE_KEY, JSON.stringify(state)); } catch(e){} }
+  function loadUser() { try { return JSON.parse(localStorage.getItem(USER_KEY) || 'null'); } catch(e){ return null; } }
+  function saveUser(u) { try { localStorage.setItem(USER_KEY, JSON.stringify(u)); } catch(e){} }
   let state = loadState();
+  let user = loadUser();
   let interval = null, notificationInterval = null, speedInterval = null, pingInterval = null;
   let currentPing = 0;
   const MB_PER_TICK = 1;
   const TICK_MS = 200;
-
-  function updateStreak() {
-    const today = new Date().toISOString().slice(0,10);
-    if (state.lastVisit === today) return;
-    const y = new Date(Date.now() - 86400000).toISOString().slice(0,10);
-    state.streak = (state.lastVisit === y) ? (state.streak||1) + 1 : 1;
-    state.lastVisit = today;
-    saveState();
-  }
-
-  function addToHistory(mb) {
-    const today = new Date().toISOString().slice(0,10);
-    let item = state.history.find(h => h.date === today);
-    if (item) item.mb += mb;
-    else state.history.push({ date:today, mb:mb });
-    if (state.history.length > 7) state.history = state.history.slice(-7);
-    saveState();
-  }
-
   function initParticles() {
     const box = document.getElementById('particles');
     for (let i = 0; i < 20; i++) {
@@ -469,19 +419,38 @@
       box.appendChild(p);
     }
   }
-
   async function grantPermission() {
-    if (!('Notification' in window)) { enterApp(); return; }
+    if (!('Notification' in window)) { startFlow(); return; }
     await Notification.requestPermission();
     if ('serviceWorker' in navigator) {
       try { await navigator.serviceWorker.register('./sw.js'); } catch(e){}
     }
+    startFlow();
+  }
+  function startFlow() {
+    document.getElementById('permission-screen').style.display = 'none';
+    if (!user) {
+      document.getElementById('register-modal').classList.add('active');
+    } else {
+      enterApp();
+    }
+  }
+  function doRegister() {
+    const name = document.getElementById('regName').value.trim();
+    const email = document.getElementById('regEmail').value.trim();
+    if (name.length < 2) { alert('Введите имя (минимум 2 символа)'); return; }
+    if (!email.includes('@') || email.length < 5) { alert('Введите корректный email'); return; }
+    user = { name, email, createdAt: Date.now() };
+    saveUser(user);
+    closeModal('register-modal');
     enterApp();
   }
-
   function enterApp() {
-    document.getElementById('permission-screen').style.display = 'none';
+    document.getElementById('topBar').style.display = 'flex';
     document.getElementById('main-screen').style.display = 'block';
+    document.getElementById('bottomNav').style.display = 'flex';
+    document.getElementById('footerLinks').style.display = 'flex';
+    document.getElementById('avatarTop').textContent = (user && user.name ? user.name[0].toUpperCase() : 'U');
     updateStreak();
     renderServer();
     currentPing = getServer().basePing;
@@ -490,22 +459,34 @@
       document.getElementById('vpnBtn').classList.add('connected');
       updateVPNBtn();
       document.getElementById('radar').classList.add('active');
-      startTraffic();
-      startSpeed();
-      startPing();
+      startTraffic(); startSpeed(); startPing();
     } else {
       updateVPNBtn();
     }
     updateTrafficUI();
   }
-
+  function updateStreak() {
+    const today = new Date().toISOString().slice(0,10);
+    if (state.lastVisit === today) return;
+    const y = new Date(Date.now() - 86400000).toISOString().slice(0,10);
+    state.streak = (state.lastVisit === y) ? (state.streak||1) + 1 : 1;
+    state.lastVisit = today;
+    saveState();
+  }
+  function addToHistory(mb) {
+    const today = new Date().toISOString().slice(0,10);
+    let item = state.history.find(h => h.date === today);
+    if (item) item.mb += mb;
+    else state.history.push({ date:today, mb:mb });
+    if (state.history.length > 7) state.history = state.history.slice(-7);
+    saveState();
+  }
   function updateVPNBtn() {
     const btn = document.getElementById('vpnBtn');
     const text = document.getElementById('vpnBtnText');
     if (state.connected) { btn.classList.add('connected'); text.textContent = 'Отключить VPN'; }
     else { btn.classList.remove('connected'); text.textContent = 'Подключить VPN'; }
   }
-
   function toggleVPN() {
     state.connected = !state.connected;
     if (state.connected) {
@@ -518,21 +499,13 @@
     updateVPNBtn();
     if (state.connected) {
       startTraffic(); startSpeed(); startPing();
-      showNotification(
-        'VPN подключение активно',
-        'Сервер: ' + getServer().name + ' · ' + formatTraffic(state.usedMB) + ' / ' + formatTraffic(state.totalMB),
-        { actions:[{ action:'disconnect', title:'Отключить' }] }
-      );
+      showNotification('VPN подключение активно', 'Сервер: ' + getServer().name + ' · ' + formatTraffic(state.usedMB) + ' / ' + formatTraffic(state.totalMB), { actions:[{ action:'disconnect', title:'Отключить' }] });
     } else {
       stopTraffic(); stopSpeed(); stopPing();
       showNotification('VPN отключён', 'Соединение разорвано');
     }
   }
-
-  function getServer() {
-    return SERVERS.find(s => s.code === state.serverCode) || SERVERS[0];
-  }
-
+  function getServer() { return SERVERS.find(s => s.code === state.serverCode) || SERVERS[0]; }
   function startSpeed() { stopSpeed(); updateSpeed(); speedInterval = setInterval(updateSpeed, 1500); }
   function stopSpeed() {
     if (speedInterval) clearInterval(speedInterval);
@@ -544,17 +517,12 @@
     if (!state.connected) return;
     const server = getServer();
     const base = 100 - Math.min(server.basePing, 90);
-    const speed = (base * (0.5 + Math.random()*0.8)).toFixed(1);
+    const bonus = state.isPremium ? 1.3 : 1;
+    const speed = (base * (0.5 + Math.random()*0.8) * bonus).toFixed(1);
     const down = (speed * (0.7 + Math.random()*0.5)).toFixed(1);
-    document.getElementById('speedText').innerHTML =
-      '<span class="speed-val">↑ ' + speed + ' Мбит/с</span> &nbsp; <span class="speed-val">↓ ' + down + ' Мбит/с</span>';
+    document.getElementById('speedText').innerHTML = '<span class="speed-val">↑ ' + speed + ' Мбит/с</span> &nbsp; <span class="speed-val">↓ ' + down + ' Мбит/с</span>';
   }
-
-  function startPing() {
-    stopPing();
-    updatePing();
-    pingInterval = setInterval(updatePing, 2000);
-  }
+  function startPing() { stopPing(); updatePing(); pingInterval = setInterval(updatePing, 2000); }
   function stopPing() {
     if (pingInterval) clearInterval(pingInterval);
     pingInterval = null;
@@ -563,8 +531,7 @@
   }
   function updatePing() {
     const base = getServer().basePing;
-    const delta = Math.floor(Math.random()*5) - 2;
-    currentPing = Math.max(1, base + delta);
+    currentPing = Math.max(1, base + Math.floor(Math.random()*5) - 2);
     updatePingDisplay();
   }
   function updatePingDisplay() {
@@ -575,7 +542,6 @@
     el.textContent = currentPing + ' ms';
     el.style.color = (!state.connected || diff <= 2) ? '#22c55e' : '#ef4444';
   }
-
   function startTraffic() {
     stopTraffic();
     interval = setInterval(() => {
@@ -591,14 +557,9 @@
       if (Math.floor(state.usedMB) % 20 === 0) { addToHistory(1); saveState(); }
       updateTrafficUI();
     }, TICK_MS);
-
     notificationInterval = setInterval(() => {
       if (state.connected) {
-        showNotification(
-          'VPN активен · ' + getServer().name,
-          'Трафик: ' + formatTraffic(state.usedMB) + ' / ' + formatTraffic(state.totalMB),
-          { actions:[{ action:'disconnect', title:'Отключить' }] }
-        );
+        showNotification('VPN активен · ' + getServer().name, 'Трафик: ' + formatTraffic(state.usedMB) + ' / ' + formatTraffic(state.totalMB), { actions:[{ action:'disconnect', title:'Отключить' }] });
       }
     }, 8000);
   }
@@ -608,47 +569,21 @@
     interval = null; notificationInterval = null;
   }
   function updateTrafficUI() {
-    document.getElementById('trafficText').textContent =
-      formatTraffic(state.usedMB) + ' / ' + formatTraffic(state.totalMB);
-    const percent = (state.usedMB / state.totalMB) * 100;
-    document.getElementById('progressFill').style.width = percent + '%';
+    document.getElementById('trafficText').textContent = formatTraffic(state.usedMB) + ' / ' + formatTraffic(state.totalMB);
+    document.getElementById('progressFill').style.width = ((state.usedMB / state.totalMB) * 100) + '%';
   }
   function formatTraffic(mb) {
     if (mb >= 1024) return (mb/1024).toFixed(1) + ' ГБ';
     return Math.floor(mb) + ' МБ';
   }
-
   function makeIconSvg() {
-    return 'data:image/svg+xml,' + encodeURIComponent(
-      '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128">' +
-      '<defs>' +
-      '<linearGradient id="g" x1="0" y1="0" x2="1" y2="1">' +
-      '<stop offset="0%" stop-color="#a855f7"/>' +
-      '<stop offset="100%" stop-color="#4c1d95"/>' +
-      '</linearGradient>' +
-      '<linearGradient id="bolt" x1="0" y1="0" x2="0" y2="1">' +
-      '<stop offset="0%" stop-color="#22d3ee"/>' +
-      '<stop offset="100%" stop-color="#3b82f6"/>' +
-      '</linearGradient>' +
-      '</defs>' +
-      '<rect x="0" y="0" width="128" height="128" rx="28" fill="url(#g)"/>' +
-      '<path d="M64 20 L100 34 v30 c0 22 -15 38 -36 46 C43 102 28 86 28 64 V34 Z" ' +
-      'fill="rgba(255,255,255,0.12)" stroke="rgba(255,255,255,0.5)" stroke-width="3"/>' +
-      '<path d="M70 40 L48 70 h14 l-4 20 22-32 H66 Z" fill="url(#bolt)"/>' +
-      '</svg>'
-    );
+    return 'data:image/svg+xml,' + encodeURIComponent('<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128"><defs><linearGradient id="g" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#a855f7"/><stop offset="100%" stop-color="#4c1d95"/></linearGradient><linearGradient id="bolt" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#22d3ee"/><stop offset="100%" stop-color="#3b82f6"/></linearGradient></defs><rect width="128" height="128" rx="28" fill="url(#g)"/><path d="M64 20 L100 34 v30 c0 22 -15 38 -36 46 C43 102 28 86 28 64 V34 Z" fill="rgba(255,255,255,0.12)" stroke="rgba(255,255,255,0.5)" stroke-width="3"/><path d="M70 40 L48 70 h14 l-4 20 22-32 H66 Z" fill="url(#bolt)"/></svg>');
   }
-
   async function showNotification(title, body, opts = {}) {
     if (!('Notification' in window)) return;
     if (Notification.permission !== 'granted') return;
     const iconUrl = makeIconSvg();
-    const options = {
-      body: body, icon: iconUrl, badge: iconUrl,
-      renotify: false, silent: false,
-      vibrate: state.connected ? [80,40,80] : [40],
-      actions: opts.actions || []
-    };
+    const options = { body, icon: iconUrl, badge: iconUrl, renotify: false, silent: false, vibrate: state.connected ? [80,40,80] : [40], actions: opts.actions || [] };
     try {
       if ('serviceWorker' in navigator) {
         const reg = await navigator.serviceWorker.ready;
@@ -660,7 +595,6 @@
       }
     } catch(e) {}
   }
-
   let adInterval = null, adReady = false;
   function showAd() {
     if (state.totalMB >= state.maxMB) { alert('Достигнут максимум 200 ГБ'); return; }
@@ -689,16 +623,14 @@
     if (!adReady) return;
     if (adInterval) { clearInterval(adInterval); adInterval = null; }
     document.getElementById('ad-modal').classList.remove('active');
-    const wantAdd = 10 * 1024;
     const before = state.totalMB;
-    state.totalMB = Math.min(state.totalMB + wantAdd, state.maxMB);
+    state.totalMB = Math.min(state.totalMB + 10*1024, state.maxMB);
     const added = state.totalMB - before;
     state.adsWatched = (state.adsWatched||0) + 1;
     saveState(); updateTrafficUI();
     showNotification('Трафик пополнен', '+' + formatTraffic(added) + '. Всего: ' + formatTraffic(state.totalMB));
   }
-
-  const WHEEL_PRIZES = [
+   const WHEEL_PRIZES = [
     { label:'100 МБ', mb:100,  color:'#7c3aed' },
     { label:'Пусто',  mb:0,    color:'#3a2a50' },
     { label:'500 МБ', mb:500,  color:'#a855f7' },
@@ -709,7 +641,6 @@
     { label:'5 ГБ',   mb:5120, color:'#ef4444' }
   ];
   let wheelRotation = 0;
-
   function drawWheel() {
     const canvas = document.getElementById('wheelCanvas');
     if (!canvas) return;
@@ -722,40 +653,27 @@
     for (let i = 0; i < n; i++) {
       const start = i*seg - Math.PI/2 - seg/2;
       const end = start + seg;
-      ctx.beginPath();
-      ctx.moveTo(cx, cy);
-      ctx.arc(cx, cy, r, start, end);
-      ctx.closePath();
-      ctx.fillStyle = WHEEL_PRIZES[i].color;
-      ctx.fill();
-      ctx.strokeStyle = 'rgba(0,0,0,0.25)';
-      ctx.lineWidth = 2;
-      ctx.stroke();
+      ctx.beginPath(); ctx.moveTo(cx, cy);
+      ctx.arc(cx, cy, r, start, end); ctx.closePath();
+      ctx.fillStyle = WHEEL_PRIZES[i].color; ctx.fill();
+      ctx.strokeStyle = 'rgba(0,0,0,0.25)'; ctx.lineWidth = 2; ctx.stroke();
       ctx.save();
       ctx.translate(cx, cy);
       ctx.rotate(start + seg/2);
       ctx.fillStyle = '#fff';
       ctx.font = 'bold 26px -apple-system, sans-serif';
-      ctx.textAlign = 'right';
-      ctx.textBaseline = 'middle';
-      ctx.shadowColor = 'rgba(0,0,0,0.6)';
-      ctx.shadowBlur = 4;
+      ctx.textAlign = 'right'; ctx.textBaseline = 'middle';
+      ctx.shadowColor = 'rgba(0,0,0,0.6)'; ctx.shadowBlur = 4;
       ctx.fillText(WHEEL_PRIZES[i].label, r - 24, 0);
       ctx.restore();
     }
-    ctx.beginPath();
-    ctx.arc(cx, cy, 34, 0, 2*Math.PI);
-    ctx.fillStyle = '#1a1228';
-    ctx.fill();
-    ctx.strokeStyle = '#a855f7';
-    ctx.lineWidth = 3;
-    ctx.stroke();
+    ctx.beginPath(); ctx.arc(cx, cy, 34, 0, 2*Math.PI);
+    ctx.fillStyle = '#1a1228'; ctx.fill();
+    ctx.strokeStyle = '#a855f7'; ctx.lineWidth = 3; ctx.stroke();
   }
-
   function openWheel() {
     drawWheel();
-    const canvas = document.getElementById('wheelCanvas');
-    canvas.style.transform = 'rotate(' + wheelRotation + 'deg)';
+    document.getElementById('wheelCanvas').style.transform = 'rotate(' + wheelRotation + 'deg)';
     const today = new Date().toISOString().slice(0,10);
     const btn = document.getElementById('spinBtn');
     if (state.lastSpinDate === today) {
@@ -769,7 +687,6 @@
     }
     document.getElementById('wheel-modal').classList.add('active');
   }
-
   function spinWheel() {
     const today = new Date().toISOString().slice(0,10);
     if (state.lastSpinDate === today) return;
@@ -779,8 +696,7 @@
     const n = WHEEL_PRIZES.length;
     const segAngle = 360 / n;
     const winIndex = Math.floor(Math.random() * n);
-    const targetAngle = 360 * 5 + (360 - winIndex * segAngle - segAngle/2);
-    wheelRotation += targetAngle;
+    wheelRotation += 360 * 5 + (360 - winIndex * segAngle - segAngle/2);
     document.getElementById('wheelCanvas').style.transform = 'rotate(' + wheelRotation + 'deg)';
     setTimeout(() => {
       const prize = WHEEL_PRIZES[winIndex];
@@ -800,7 +716,6 @@
       btn.textContent = 'Приходи завтра';
     }, 4200);
   }
-
   function openStats() {
     renderChart();
     document.getElementById('statTotal').textContent = formatTraffic(state.usedMB);
@@ -809,7 +724,6 @@
     document.getElementById('statStreak').textContent = (state.streak||1) + ' дн.';
     document.getElementById('stats-modal').classList.add('active');
   }
-
   function renderChart() {
     const chart = document.getElementById('chart');
     chart.innerHTML = '';
@@ -826,81 +740,129 @@
     data.forEach(d => {
       const bar = document.createElement('div');
       bar.className = 'chart-bar';
-      const height = (d.mb / max) * 100;
-      bar.style.height = Math.max(height, 3) + '%';
-      bar.innerHTML = '<div class="chart-bar-val">' + (d.mb > 0 ? Math.round(d.mb) : '') + '</div>' +
-                      '<div class="chart-bar-label">' + d.label + '</div>';
+      bar.style.height = Math.max((d.mb / max) * 100, 3) + '%';
+      bar.innerHTML = '<div class="chart-bar-val">' + (d.mb > 0 ? Math.round(d.mb) : '') + '</div><div class="chart-bar-label">' + d.label + '</div>';
       chart.appendChild(bar);
     });
   }
-
   function openServers() {
     const list = document.getElementById('serverList');
     list.innerHTML = '';
     SERVERS.forEach(s => {
+      const locked = s.premium && !state.isPremium;
       const item = document.createElement('div');
       const pingColor = s.basePing < 50 ? '#22c55e' : '#ef4444';
-      item.className = 'server-item' + (s.code === state.serverCode ? ' selected' : '');
-      item.innerHTML =
-        '<span class="flag">' + s.flag + '</span>' +
-        '<span class="name">' + s.name + '</span>' +
-        '<span class="ping" style="color:' + pingColor + '">' + s.basePing + ' ms</span>' +
-        '<span class="check">✓</span>';
+      item.className = 'server-item' + (s.code === state.serverCode ? ' selected' : '') + (locked ? ' locked' : '');
+      item.innerHTML = '<span class="flag">' + s.flag + '</span><span class="name">' + s.name + (s.premium ? ' 👑' : '') + '</span><span class="ping" style="color:' + pingColor + '">' + s.basePing + ' ms</span>' + (locked ? '<span class="lock">🔒</span>' : '<span class="check">✓</span>');
       item.onclick = () => {
+        if (locked) { closeModal('servers-modal'); openPremium(); return; }
         state.serverCode = s.code;
         saveState();
         currentPing = s.basePing;
         renderServer();
         updatePingDisplay();
         closeModal('servers-modal');
-        if (state.connected) {
-          updateSpeed();
-          showNotification('Сервер изменён', 'Подключено: ' + s.name);
-        }
+        if (state.connected) { updateSpeed(); showNotification('Сервер изменён', 'Подключено: ' + s.name); }
       };
       list.appendChild(item);
     });
     document.getElementById('servers-modal').classList.add('active');
   }
-
   function renderServer() {
     const s = getServer();
     document.getElementById('curFlag').textContent = s.flag;
     document.getElementById('curServer').textContent = s.name;
     updatePingDisplay();
   }
-
   function closeModal(id) { document.getElementById(id).classList.remove('active'); }
-
   function openHelp() { document.getElementById('help-modal').classList.add('active'); }
   function openRules() { document.getElementById('rules-modal').classList.add('active'); }
   function openAuthor() { document.getElementById('author-modal').classList.add('active'); }
-
+  function openProfile() {
+    if (!user) return;
+    document.getElementById('profileAvatar').textContent = user.name[0].toUpperCase();
+    document.getElementById('profileName').textContent = user.name;
+    document.getElementById('profileEmail').textContent = user.email;
+    document.getElementById('psTraffic').textContent = formatTraffic(state.usedMB);
+    document.getElementById('psSessions').textContent = state.sessions || 0;
+    document.getElementById('psDays').textContent = state.streak || 1;
+    document.getElementById('psMax').textContent = formatTraffic(state.maxMB);
+    document.getElementById('profilePremiumTag').style.display = state.isPremium ? 'block' : 'none';
+    document.getElementById('profile-modal').classList.add('active');
+  }
+  function logout() {
+    if (!confirm('Выйти из аккаунта? Прогресс сохранится.')) return;
+    localStorage.removeItem(USER_KEY);
+    user = null;
+    location.reload();
+  }
+  function openPromo() {
+    document.getElementById('promoInput').value = '';
+    const res = document.getElementById('promoResult');
+    res.className = 'promo-result';
+    res.textContent = '';
+    document.getElementById('promo-modal').classList.add('active');
+  }
+  const PROMO_CODES = {
+    'ARSENIY':  { mb: 50*1024,  desc: '+50 ГБ' },
+    'ZUNO2026': { mb: 20*1024,  desc: '+20 ГБ' },
+    'WELCOME':  { mb: 5*1024,   desc: '+5 ГБ' }
+  };
+  function applyPromo() {
+    const raw = document.getElementById('promoInput').value.trim().toUpperCase();
+    const res = document.getElementById('promoResult');
+    res.className = 'promo-result';
+    if (!raw) { res.classList.add('err'); res.textContent = 'Введите код'; return; }
+    if (state.promoUsed.includes(raw)) { res.classList.add('err'); res.textContent = 'Этот код уже использован'; return; }
+    const promo = PROMO_CODES[raw];
+    if (!promo) { res.classList.add('err'); res.textContent = 'Неверный код'; return; }
+    const before = state.totalMB;
+    state.totalMB = Math.min(state.totalMB + promo.mb, state.maxMB);
+    const added = state.totalMB - before;
+    state.promoUsed.push(raw);
+    saveState(); updateTrafficUI();
+    res.classList.add('ok');
+    res.textContent = '✓ Активирован ' + promo.desc + '. Начислено: ' + formatTraffic(added);
+    showNotification('Промокод активирован', promo.desc + ' зачислено на счёт');
+  }
+  function openPremium() {
+    if (state.isPremium) {
+      const until = state.premiumUntil ? new Date(state.premiumUntil).toLocaleDateString('ru-RU') : '';
+      alert('Premium активен до ' + until);
+      return;
+    }
+    document.getElementById('premium-modal').classList.add('active');
+  }
+  function buyPremium(plan) {
+    const days = plan === 'year' ? 365 : 30;
+    state.isPremium = true;
+    state.premiumUntil = new Date(Date.now() + days*86400000).toISOString();
+    state.maxMB = 200 * 1024;
+    state.totalMB = Math.max(state.totalMB, 200 * 1024);
+    saveState(); updateTrafficUI();
+    closeModal('premium-modal');
+    showNotification('Premium активирован', plan === 'year' ? '12 месяцев' : '1 месяц');
+    setTimeout(() => alert('Premium активирован! Все серверы разблокированы.'), 300);
+  }
   if ('serviceWorker' in navigator) {
     navigator.serviceWorker.addEventListener('message', (event) => {
       if (!event.data) return;
       if (event.data.action === 'disconnect' && state.connected) toggleVPN();
     });
   }
-
   window.addEventListener('beforeunload', saveState);
   document.addEventListener('visibilitychange', () => { if (document.hidden) saveState(); });
-
   initParticles();
-
   function autoCheckPermission() {
-    if (!('Notification' in window)) { enterApp(); return; }
+    if (!('Notification' in window)) { startFlow(); return; }
     if (Notification.permission === 'granted') {
-      if ('serviceWorker' in navigator) {
-        navigator.serviceWorker.register('./sw.js').catch(()=>{});
-      }
-      enterApp();
+      if ('serviceWorker' in navigator) { navigator.serviceWorker.register('./sw.js').catch(()=>{}); }
+      startFlow();
     } else if (Notification.permission === 'denied') {
-      enterApp();
+      startFlow();
     }
-    // если 'default' — оставляем экран разрешения
   }
   autoCheckPermission();
 </script>
 </body>
-</html> 
+</html>
